@@ -1,0 +1,89 @@
+create table Base_de_datos.dbo.BitacoraEvento (
+  Id int primary key not null,
+  IdTipoEvento int not null,
+  Descripcion varchar(50) not null,
+  IdPostByUser int not null,
+  PostInIP nvarchar(50) not null,
+  PostTime datetime not null,
+  foreign key (IdTipoEvento) references TipoEvento (Id),
+  foreign key (IdPostByUser) references Usuario (Id)
+);
+GO
+
+create table Base_de_datos.dbo.DBError (
+  Id int primary key not null,
+  UserName nvarchar(100) not null,
+  Number int not null,
+  State int not null,
+  Severity int not null,
+  Line int not null,
+  Proced nvarchar(100) not null,
+  Message nvarchar(500) not null,
+  DateTime datetime not null,
+  CodigoError int not null,
+  foreign key (CodigoError) references Error (Id)
+);
+GO
+
+create table Base_de_datos.dbo.Empleado (
+  id int primary key not null,
+  idPuesto int not null,
+  ValorDocumentoIdentidad nvarchar(50) not null,
+  Nombre nvarchar(100) not null,
+  FechaContratacion date not null,
+  SaldoVacaciones decimal(5,2) not null,
+  EsActivo bit,
+  foreign key (idPuesto) references Puesto (id)
+);
+GO
+
+create table Base_de_datos.dbo.Error (
+  Id int primary key not null,
+  Codigo int not null,
+  Descripcion varchar(50) not null
+);
+GO
+
+create table Base_de_datos.dbo.Movimientos (
+  Id int primary key not null,
+  IdEmpleado int not null,
+  IdTipoMovimiento int not null,
+  Fecha date not null,
+  Monto decimal(10,2) not null,
+  NuevoSaldo decimal(10,2) not null,
+  IdPostByUser int not null,
+  PostInIP nvarchar(50) not null,
+  PostTime datetime not null,
+  foreign key (IdEmpleado) references Empleado (id),
+  foreign key (IdTipoMovimiento) references TipoDeMovimiento (id),
+  foreign key (IdPostByUser) references Usuario (Id)
+);
+GO
+
+create table Base_de_datos.dbo.Puesto (
+  id int primary key not null,
+  Nombre varchar(128) not null,
+  SalarioxHora money not null
+);
+GO
+
+create table Base_de_datos.dbo.TipoDeMovimiento (
+  id int primary key not null,
+  Nombre varchar(128) not null,
+  TipoAccion varchar(128) not null
+);
+GO
+
+create table Base_de_datos.dbo.TipoEvento (
+  Id int primary key not null,
+  Nombre nvarchar(50) not null
+);
+GO
+
+create table Base_de_datos.dbo.Usuario (
+  Id int primary key not null,
+  Username nvarchar(50) not null,
+  Password nvarchar(255) not null
+);
+GO
+
