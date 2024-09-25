@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+import xml.etree.ElementTree as ET
 import pyodbc
 
 app = Flask(__name__)
@@ -17,9 +18,48 @@ def get_db_connection():
     )
     return conn
 
-# Main route
-# Main route
-# Main route
+def leer_xml():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Load and parse the XML file
+        tree = ET.parse('Datos.xml')  # Ensure the correct XML file name
+        root = tree.getroot()
+
+        # Process the Puestos section
+        for puesto in root.find('Puestos'):
+            nombre = puesto.get('Nombre')
+            salario = puesto.get('SalarioxHora')
+
+            # Insert into the Puesto table
+            cursor.execute("EXEC dbo.InsertarPuesto @Nombre=?, @SalarioxHora=?", (nombre, salario))
+
+        # Commit changes after all inserts
+        conn.commit()
+        print("Datos de puestos insertados correctamente.")
+
+    except Exception as e:
+        # Handle any errors and roll back in case of failure
+        conn.rollback()
+        print(f"Error al insertar datos de puestos: {e}")
+
+    finally:
+        # Always close the connection
+        conn.close()
+
+
+@app.route('/importar-xml', methods=['GET'])
+def importar_xml():
+    try:
+        leer_xml()  # Ejecuta la función que lee el XML e inserta los datos en la base de datos
+        flash('Datos importados exitosamente desde el XML.')
+    except Exception as e:
+        flash(f'Ocurrió un error al importar el XML: {e}')
+
+    return redirect(url_for('index'))  # Redirige de vuelta a la página principal o a la que prefieras
+
+
 # Main route
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -57,3 +97,6 @@ def success():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+    #http://127.0.0.1:5000/importar-xml
