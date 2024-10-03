@@ -1,89 +1,288 @@
-create table Base_de_datos.dbo.BitacoraEvento (
-  Id int primary key not null,
-  IdTipoEvento int not null,
-  Descripcion varchar(50) not null,
-  IdPostByUser int not null,
-  PostInIP nvarchar(50) not null,
-  PostTime datetime not null,
-  foreign key (IdTipoEvento) references TipoEvento (Id),
-  foreign key (IdPostByUser) references Usuario (Id)
-);
-GO
+DECLARE @lo int = 1, @hi int;
+DECLARE @xmlData XML; -- Variable para almacenar el XML
 
-create table Base_de_datos.dbo.DBError (
-  Id int primary key not null,
-  UserName nvarchar(100) not null,
-  Number int not null,
-  State int not null,
-  Severity int not null,
-  Line int not null,
-  Proced nvarchar(100) not null,
-  Message nvarchar(500) not null,
-  DateTime datetime not null,
-  CodigoError int not null,
-  foreign key (CodigoError) references Error (Id)
-);
-GO
+-- Leer el archivo XML y cargarlo en la variable @xmlData (esto depende de cómo se carga en tu caso)
+-- Esto se asume que ya lo tienes o lo haces fuera de este bloque
 
-create table Base_de_datos.dbo.Empleado (
-  id int primary key not null,
-  idPuesto int not null,
-  ValorDocumentoIdentidad nvarchar(50) not null,
-  Nombre nvarchar(100) not null,
-  FechaContratacion date not null,
-  SaldoVacaciones decimal(5,2) not null,
-  EsActivo bit,
-  foreign key (idPuesto) references Puesto (id)
+-- Estructura de la tabla temporal
+DECLARE @TipoDeMovimientoXML TABLE (
+    Sec int identity(1,1),
+    Id int,
+    Nombre nvarchar(100),
+    TipoAccion nvarchar(50)
 );
-GO
 
-create table Base_de_datos.dbo.Error (
-  Id int primary key not null,
-  Codigo int not null,
-  Descripcion varchar(50) not null
-);
-GO
+-- Insertar los datos del XML en la tabla temporal
+INSERT INTO @TipoDeMovimientoXML(Id, Nombre, TipoAccion)
+SELECT
+    T.C.value('@Id', 'int') AS Id,
+    T.C.value('@Nombre', 'nvarchar(100)') AS Nombre,
+    T.C.value('@TipoAccion', 'nvarchar(50)') AS TipoAccion
+FROM @xmlData.nodes('/TiposMovimientos/TipoMovimiento') AS T(C);
 
-create table Base_de_datos.dbo.Movimientos (
-  Id int primary key not null,
-  IdEmpleado int not null,
-  IdTipoMovimiento int not null,
-  Fecha date not null,
-  Monto decimal(10,2) not null,
-  NuevoSaldo decimal(10,2) not null,
-  IdPostByUser int not null,
-  PostInIP nvarchar(50) not null,
-  PostTime datetime not null,
-  foreign key (IdEmpleado) references Empleado (id),
-  foreign key (IdTipoMovimiento) references TipoDeMovimiento (id),
-  foreign key (IdPostByUser) references Usuario (Id)
-);
-GO
+-- Obtener el valor máximo de Sec
+SELECT @hi = MAX(Sec) FROM @TipoDeMovimientoXML;
 
-create table Base_de_datos.dbo.Puesto (
-  id int primary key not null,
-  Nombre varchar(128) not null,
-  SalarioxHora money not null
-);
-GO
+-- Bucle para procesar los datos de la tabla temporal
+WHILE (@lo <= @hi)
+BEGIN
+    -- Declaración de variables para almacenar los campos
+    DECLARE @Id int, @Nombre nvarchar(100), @TipoAccion nvarchar(50);
 
-create table Base_de_datos.dbo.TipoDeMovimiento (
-  id int primary key not null,
-  Nombre varchar(128) not null,
-  TipoAccion varchar(128) not null
-);
-GO
+    -- Obtener los valores de la fila actual
+    SELECT
+        @Id = TM.Id,
+        @Nombre = TM.Nombre,
+        @TipoAccion = TM.TipoAccion
+    FROM @TipoDeMovimientoXML AS TM
+    WHERE TM.Sec = @lo;
 
-create table Base_de_datos.dbo.TipoEvento (
-  Id int primary key not null,
-  Nombre nvarchar(50) not null
-);
-GO
+    -- Ejecutar el procedimiento almacenado con los valores obtenidos
+    EXEC insertaTipoDM @Id, @Nombre, @TipoAccion, @outresult;
 
-create table Base_de_datos.dbo.Usuario (
-  Id int primary key not null,
-  Username nvarchar(50) not null,
-  Password nvarchar(255) not null
-);
-GO
+    -- Incrementar el contador del bucle
+    SET @lo = @lo + 1;
+END;
+
+
+
+
+CREATE PROCEDURE insertaTipoDM
+    @Nombre NVARCHAR(100),
+    @TipoAccion NVARCHAR(50),
+    @outresult NVARCHAR(200) OUTPUT
+AS
+BEGIN
+    -- Iniciar transacción para asegurar atomicidad
+   SET NOCOUNT ON;
+
+    BEGIN TRY
+
+        -- Insertar los valores en la tabla de destino
+        INSERT INTO TipoDeMovimientos (Nombre, TipoAccion)
+        VALUES (@Nombre, @TipoAccion);
+
+        -- Asignar mensaje de éxito al parámetro de salida
+        SET @outresult = 'Inserción exitosa para el Id: ' + CAST(@Id AS NVARCHAR(10));
+
+        -- Confirmar la transacción
+    END TRY
+    BEGIN CATCH
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    END CATCH;
+END;
+go
+
+CREATE PROCEDURE insertarTipoE
+@Nombre NVARCHAR(50),
+    @outresult NVARCHAR(200) OUTPUT
+
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.TipoEvento(Nombre)
+        VALUES(@Nombre)
+        SET @outresult = 'Inserción exitosa para el Id: ';
+
+    end try
+    begin catch
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    end catch
+    end
+    go
+
+CREATE PROCEDURE insertarUsuario
+@Username NVARCHAR(50),
+    @Password NVARCHAR(50),
+    @outresult NVARCHAR(200) OUTPUT
+
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.TipoEvento(Nombre)
+        VALUES(@Username,@Password)
+        SET @outresult = 'Inserción exitosa para el Id: ';
+
+    end try
+    begin catch
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    end catch
+    end
+    go
+
+
+CREATE PROCEDURE insertarError
+@Codigo INT,
+    @Descripcion NVARCHAR(50),
+    @outresult NVARCHAR(200) OUTPUT
+
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.Error(Codigo, Descripcion)
+        VALUES(@Codigo,@Descripcion)
+        SET @outresult = 'Inserción exitosa para el Id: ';
+
+    end try
+    begin catch
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    end catch
+    end
+    go
+
+CREATE PROCEDURE insertarEmpleado
+@IDpuesto INT,
+    @DocID INT,
+    @Nombre NVARCHAR(100),
+    @FechaC DATE,
+    @Saldo DECIMAL(5,2),
+    @EsAtivo BIT,
+    @outresult NVARCHAR(200) OUTPUT
+
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.Empleado(idPuesto, ValorDocumentoIdentidad, Nombre, FechaContratacion, SaldoVacaciones, EsActivo)
+        VALUES(@IDpuesto,@DocID,@Nombre,@FechaC,@Saldo,@EsAtivo)
+        SET @outresult = 'Inserción exitosa para el Id: ';
+
+    end try
+    begin catch
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    end catch
+    end
+    go
+
+
+CREATE PROCEDURE insertarMovimiento
+@IDempleado INT,
+    @IDtipodeM INT,
+    @FechaC DATE,
+    @Monto DECIMAL(10,2),
+    @NuevoSaldo DECIMAL(10,2),
+    @IdPostBY INT,
+    @Post NVARCHAR(50),
+    @FechaR DATETIME,
+    @outresult NVARCHAR(200) OUTPUT
+
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.Movimientos(IdEmpleado, IdTipoMovimiento, Fecha, Monto, NuevoSaldo, IdPostByUser, PostInIP, PostTime)
+        VALUES(@IDempleado,@IDtipodeM,@FechaC,@Monto,@NuevoSaldo,@IdPostBY,@Post,@FechaR)
+        SET @outresult = 'Inserción exitosa para el Id: ';
+
+    end try
+    begin catch
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    end catch
+    end
+    go
+
+
+    CREATE PROCEDURE insertarBitacora
+@IDTipoE INT,
+    @Descripcion NVARCHAR(50),
+    @IdPostBY INT,
+    @Post NVARCHAR(50),
+    @FechaR DATETIME,
+    @outresult NVARCHAR(200) OUTPUT
+
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.BitacoraEvento(IdTipoEvento, Descripcion, IdPostByUser, PostInIP, PostTime)
+        VALUES(@IDTipoE,@Descripcion,@IdPostBY,@Post,@FechaR)
+        SET @outresult = 'Inserción exitosa para el Id: ';
+
+    end try
+    begin catch
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    end catch
+    end
+    go
+
+
+    CREATE PROCEDURE insertarDBError
+@Username NVARCHAR(100),
+    @Number int,
+        @State int,
+        @Sev int,
+    @Line int,
+    @Proced NVARCHAR(100),
+    @Message NVARCHAR(100),
+    @FechaR DATETIME,
+    @outresult NVARCHAR(200) OUTPUT
+
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.DBError(UserName, Number, State, Severity, Line, Proced, Message, DateTime)
+        VALUES(@Username,@Number,@State,@Sev,@Line,@Proced,@Message,@FechaR)
+        SET @outresult = 'Inserción exitosa para el Id: ';
+
+    end try
+    begin catch
+
+        SET @outresult = 'Error: ' + ERROR_MESSAGE();
+    PRINT 'Ocurrió un error al insertar el puesto';
+        PRINT ERROR_MESSAGE();  -- Mostrar el mensaje de error
+    end catch
+    end
+    go
+
+
+CREATE PROCEDURE ContarIntentosFallidosLogin
+    @Username NVARCHAR(100),
+    @TiempoLimite DATETIME,
+    @TipoEventoLoginFallido INT,
+    @NumeroIntentos INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Contar intentos fallidos en los últimos 30 minutos
+    SELECT @NumeroIntentos = COUNT(*)
+    FROM BitacoraEvento
+    WHERE IdPostByUser = (SELECT Id FROM Users WHERE Username = @Username)
+    AND PostTime > @TiempoLimite
+    AND idTipoEvento = @TipoEventoLoginFallido;
+END
+
+
 
