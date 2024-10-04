@@ -1,0 +1,293 @@
+<Datos> 
+    <Puestos> 
+        <Puesto Nombre="Cajero" SalarioxHora="11.00"/> 
+        <Puesto Nombre="Camarero" SalarioxHora="10.00"/> 
+        <Puesto Nombre="Cuidador" SalarioxHora="13.50"/> 
+        <Puesto Nombre="Conductor" SalarioxHora="15.00"/> 
+        <Puesto Nombre="Asistente" SalarioxHora="11.00"/> 
+        <Puesto Nombre="Recepcionista" SalarioxHora="12.00"/> 
+        <Puesto Nombre="Fontanero" SalarioxHora="13.00"/> 
+        <Puesto Nombre="Niñera" SalarioxHora="12.00"/> 
+        <Puesto Nombre="Conserje" SalarioxHora="11.00"/> 
+        <Puesto Nombre="Albañil" SalarioxHora="10.50"/> 
+    </Puestos> 
+    <TiposEvento> 
+        <TipoEvento Id="1" Nombre="Login Exitoso"/> 
+        <TipoEvento Id="2" Nombre="Login No Exitoso"/> 
+        <TipoEvento Id="3" Nombre="Login deshabilitado"/> 
+        <TipoEvento Id="4" Nombre="Logout"/> 
+        <TipoEvento Id="5" Nombre="Insercion no exitosa"/> 
+        <TipoEvento Id="6" Nombre="Insercion exitosa"/>
+        <TipoEvento Id="7" Nombre="Update no exitoso"/> 
+        <TipoEvento Id="8" Nombre="Update exitoso"/> 
+        <TipoEvento Id="9" Nombre="Intento de borrado"/> 
+        <TipoEvento Id="10" Nombre="Borrado exitoso"/> 
+        <TipoEvento Id="11" Nombre="Consulta con filtro de nombre"/> 
+        <TipoEvento Id="12" Nombre="Consulta con filtro de cedula"/> 
+        <TipoEvento Id="13" Nombre="Intento de insertar movimiento"/> 
+        <TipoEvento Id="14" Nombre="Insertar movimiento exitoso"/> 
+    </TiposEvento>
+    <TiposMovimientos> 
+        <TipoMovimiento Id="1" Nombre="Cumplir mes" TipoAccion="Credito"/> 
+        <TipoMovimiento Id="2" Nombre="Bono vacacional" TipoAccion="Credito"/> 
+        <TipoMovimiento Id="3" Nombre="Reversion Debito" TipoAccion="Credito"/>
+        <TipoMovimiento Id="4" Nombre="Disfrute de vacaciones" TipoAccion="Debito"/> 
+        <TipoMovimiento Id="5" Nombre="Venta de vacaciones" TipoAccion="Debito"/>
+        <TipoMovimiento Id="6" Nombre="Reversion de Credito" TipoAccion="Debito"/> 
+    </TiposMovimientos> 
+    <Empleados> 
+        <empleado Puesto="Camarero" ValorDocumentoIdentidad="6993943" Nombre="Kaitlyn Jensen" FechaContratacion="2017-12-07"/> 
+        <empleado Puesto="Albañil" ValorDocumentoIdentidad="1896802" Nombre ="Robert Buchanan" FechaContratacion="2020-09-20"/> 
+        <empleado Puesto="Cajero" ValorDocumentoIdentidad="5095109" Nombre= "Christina Ward" FechaContratacion="2015-09-13"/> 
+        <empleado Puesto="Fontanero" ValorDocumentoIdentidad="8403646" Nombre="Bradley Wright" FechaContratacion="2020-01-27"/> 
+        <empleado Puesto="Conserje" ValorDocumentoIdentidad="6019592" Nombre="Robert Singh" FechaContratacion="2017-02-01"/> 
+        <empleado Puesto="Asistente" ValorDocumentoIdentidad="4510358" Nombre="Ryan Mitchell" FechaContratacion="2018-06-08"/> 
+        <empleado Puesto="Conductor" ValorDocumentoIdentidad="7517662" Nombre="Candace Fox" FechaContratacion="2013-12-17"/> 
+        <empleado Puesto="Asistente" ValorDocumentoIdentidad="8326328" Nombre="Allison Murillo" FechaContratacion="2020-04-19"/> 
+        <empleado Puesto="Cuidador" ValorDocumentoIdentidad="2161775" Nombre="Jessica Murphy" FechaContratacion="2017-04-12"/> 
+        <empleado Puesto="Fontanero" ValorDocumentoIdentidad="2918773" Nombre="Nancy Newton PhD" FechaContratacion="2016-11-22"/>
+        <empleado Puesto="Recepcionista" ValorDocumentoIdentidad="1234567" Nombre="Luna Vargas" FechaContratacion="2020-03-14"/>
+        <empleado Puesto="Niñera" ValorDocumentoIdentidad="2345678" Nombre="Diego Navarro" FechaContratacion="2013-08-11"/>
+        <empleado Puesto="Recepcionista" ValorDocumentoIdentidad="3456789" Nombre="Mara Castillo" FechaContratacion="2021-09-11"/>
+        <empleado Puesto="Conserje" ValorDocumentoIdentidad="4567890" Nombre="Joaquín Pérez" FechaContratacion="2004-12-17"/>
+        <empleado Puesto="Asistente" ValorDocumentoIdentidad="5678901" Nombre="Sofía Ibáñez" FechaContratacion="2000-09-16"/>
+        <empleado Puesto="Fontanero" ValorDocumentoIdentidad="6789012" Nombre="Álvaro Mendoza" FechaContratacion="2008-07-27"/>
+        <empleado Puesto="Albañil" ValorDocumentoIdentidad="7890123" Nombre="Valeria Ruiz" FechaContratacion="2020-12-14"/>
+        <empleado Puesto="Recepcionista" ValorDocumentoIdentidad="8901234" Nombre="Lucas Benítez" FechaContratacion="2003-05-28"/>
+        <empleado Puesto="Conductor" ValorDocumentoIdentidad="9012345" Nombre="Natalia Ramos" FechaContratacion="2002-11-13"/>
+        <empleado Puesto="Camarero" ValorDocumentoIdentidad="1122334" Nombre="Mateo Velasco" FechaContratacion="2008-09-20"/>
+        <empleado Puesto="Cuidador" ValorDocumentoIdentidad="2233445" Nombre="Camila Duarte" FechaContratacion="2020-05-12"/>
+        <empleado Puesto="Albañil" ValorDocumentoIdentidad="3344556" Nombre="Emilio Carvajal" FechaContratacion="2023-08-25"/>
+        <empleado Puesto="Conductor" ValorDocumentoIdentidad="4455667" Nombre="Isabella Torres" FechaContratacion="2009-07-14"/>
+        <empleado Puesto="Niñera" ValorDocumentoIdentidad="5566778" Nombre="Marcos Salinas" FechaContratacion="2018-04-10"/>
+        <empleado Puesto="Conserje" ValorDocumentoIdentidad="6677889" Nombre="Elena Morales" FechaContratacion="2015-05-05"/>
+        <empleado Puesto="Cajero" ValorDocumentoIdentidad="7788990" Nombre="Gabriel Rivera" FechaContratacion="2013-10-05"/>
+        <empleado Puesto="Recepcionista" ValorDocumentoIdentidad="8899001" Nombre="Victoria León" FechaContratacion="2019-11-12"/>
+        <empleado Puesto="Albañil" ValorDocumentoIdentidad="9900112" Nombre="Simón García" FechaContratacion="2008-06-27"/>
+        <empleado Puesto="Fontanero" ValorDocumentoIdentidad="1011123" Nombre="Clara Montalvo" FechaContratacion="2016-09-27"/>
+        <empleado Puesto="Cuidador" ValorDocumentoIdentidad="2131415" Nombre="Ricardo Núñez" FechaContratacion="2007-10-19"/> 
+    </Empleados> 
+    <Usuarios> 
+        <usuario Id="1" Nombre="UsuarioScripts" Pass="UsuarioScripts"/> 
+        <usuario Id="2" Nombre="mgarrison" Pass="hola5710"/> 
+        <usuario Id="3" Nombre="jgonzalez" Pass="jorge320"/> 
+        <usuario Id="4" Nombre="zkelly" Pass="kells12"/> 
+        <usuario Id="5" Nombre="andersondeborah" Pass="anonimo21"/> 
+        <usuario Id="6" Nombre="hardingmicheal" Pass="usuario101"/> 
+    </Usuarios> 
+    <Movimientos> 
+        <movimiento ValorDocId="8403646" IdTipoMovimiento="Cumplir mes" Fecha="2022-01-27" Monto="1" PostByUser="andersondeborah" PostInIP="10.1.0.100" PostTime="2022-01-27 23:40:23" />
+		<movimiento ValorDocId="6019592" IdTipoMovimiento="Cumplir mes" Fecha="2022-02-01" Monto="1" PostByUser="andersondeborah" PostInIP="203.0.113.100" PostTime="2022-02-01 22:40:47" />
+		<movimiento ValorDocId="1234567" IdTipoMovimiento="Reversion Debito" Fecha="2022-03-14" Monto="12" PostByUser="andersondeborah" PostInIP="192.0.2.250" PostTime="2022-03-14 19:52:44" />
+		<movimiento ValorDocId="5566778" IdTipoMovimiento="Bono Vacacional" Fecha="2022-04-10" Monto="6" PostByUser="UsuarioScripts" PostInIP="172.17.1.250" PostTime="2022-04-10 19:47:36" />
+		<movimiento ValorDocId="2161775" IdTipoMovimiento="Cumplir mes" Fecha="2022-04-12" Monto="1" PostByUser="jgonzalez" PostInIP="198.51.100.50" PostTime="2022-04-12 06:21:13" />
+		<movimiento ValorDocId="8326328" IdTipoMovimiento="Reversion Debito" Fecha="2022-04-19" Monto="9" PostByUser="hardingmicheal" PostInIP="203.0.113.100" PostTime="2022-04-19 10:43:27" />
+		<movimiento ValorDocId="6677889" IdTipoMovimiento="Cumplir mes" Fecha="2022-05-05" Monto="1" PostByUser="UsuarioScripts" PostInIP="192.0.2.1" PostTime="2022-05-05 16:42:34" />
+		<movimiento ValorDocId="2233445" IdTipoMovimiento="Bono vacacional" Fecha="2022-05-12" Monto="5" PostByUser="andersondeborah" PostInIP="198.51.100.50" PostTime="2022-05-12 17:18:56" />
+		<movimiento ValorDocId="8901234" IdTipoMovimiento="Cumplir mes" Fecha="2022-05-28" Monto="1" PostByUser="UsuarioScripts" PostInIP="172.17.2.200" PostTime="2022-05-28 17:19:33" />
+		<movimiento ValorDocId="4510358" IdTipoMovimiento="Reversion Debito" Fecha="2022-06-08" Monto="10" PostByUser="andersondeborah" PostInIP="172.16.1.50" PostTime="2022-06-08 07:48:33" />
+		<movimiento ValorDocId="9900112" IdTipoMovimiento="Bono vacacional" Fecha="2022-06-27" Monto="7" PostByUser="jgonzalez" PostInIP="192.168.3.150" PostTime="2022-06-27 10:37:12" />
+		<movimiento ValorDocId="4455667" IdTipoMovimiento="Cumplir mes" Fecha="2022-07-14" Monto="1" PostByUser="zkelly" PostInIP="172.17.2.200" PostTime="2022-07-14 17:38:25" />
+		<movimiento ValorDocId="8403646" IdTipoMovimiento="Bono Vacacional" Fecha="2022-07-26" Monto="9" PostByUser="jgonzalez" PostInIP="198.51.100.100" PostTime="2022-07-26 03:10:22" />
+		<movimiento ValorDocId="6789012" IdTipoMovimiento="Reversion Debito" Fecha="2022-07-27" Monto="8" PostByUser="UsuarioScripts" PostInIP="192.0.2.50" PostTime="2022-07-27 19:47:36" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Cumplir mes" Fecha="2022-08-11" Monto="1" PostByUser="andersondeborah" PostInIP="10.0.2.50" PostTime="2022-08-11 22:43:37" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Reversion Debito" Fecha="2022-08-25" Monto="5" PostByUser="jgonzalez" PostInIP="192.0.2.1" PostTime="2022-08-25 19:30:02" />
+		<movimiento ValorDocId="3456789" IdTipoMovimiento="Bono vacacional" Fecha="2022-09-11" Monto="4" PostByUser="UsuarioScripts" PostInIP="192.168.1.50" PostTime="2022-09-11 21:52:25" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Bono vacacional" Fecha="2022-09-13" Monto="7" PostByUser="UsuarioScripts" PostInIP="192.0.2.175" PostTime="2022-09-13 14:03:54" />
+		<movimiento ValorDocId="5678901" IdTipoMovimiento="Reversion Debito" Fecha="2022-09-16" Monto="9" PostByUser="zkelly" PostInIP="192.168.4.200" PostTime="2022-09-16 22:36:17" />
+		<movimiento ValorDocId="1896802" IdTipoMovimiento="Cumplir mes" Fecha="2022-09-20" Monto="1" PostByUser="hardingmicheal" PostInIP="198.51.100.250" PostTime="2022-09-20 04:21:30" />
+		<movimiento ValorDocId="1122334" IdTipoMovimiento="Bono vacacional" Fecha="2022-09-20" Monto="6" PostByUser="hardingmicheal" PostInIP="192.168.9.50" PostTime="2022-09-20 16:25:13" />
+		<movimiento ValorDocId="1011123" IdTipoMovimiento="Reversion Debito" Fecha="2022-09-27" Monto="10" PostByUser="andersondeborah" PostInIP="172.17.3.150" PostTime="2022-09-27 09:21:47" />
+		<movimiento ValorDocId="7788990" IdTipoMovimiento="Cumplir mes" Fecha="2022-10-05" Monto="1" PostByUser="jgonzalez" PostInIP="203.0.113.50" PostTime="2022-10-05 08:22:18" />
+		<movimiento ValorDocId="2131415" IdTipoMovimiento="Bono vacacional" Fecha="2022-10-19" Monto="11" PostByUser="UsuarioScripts" PostInIP="192.0.2.175" PostTime="2022-10-19 20:59:14" />
+		<movimiento ValorDocId="8899001" IdTipoMovimiento="Cumplir mes" Fecha="2022-11-12" Monto="1" PostByUser="UsuarioScripts" PostInIP="10.2.3.255" PostTime="2022-11-12 22:33:51" />
+		<movimiento ValorDocId="9012345" IdTipoMovimiento="Reversion Debito" Fecha="2022-11-13" Monto="5" PostByUser="jgonzalez" PostInIP="192.168.0.1" PostTime="2022-11-13 07:15:08" />
+		<movimiento ValorDocId="2918773" IdTipoMovimiento="Cumplir mes" Fecha="2022-11-22" Monto="1" PostByUser="UsuarioScripts" PostInIP="10.0.0.1" PostTime="2022-11-22 10:37:59" />
+		<movimiento ValorDocId="6019592" IdTipoMovimiento="Bono vacacional" Fecha="2022-11-28" Monto="4" PostByUser="zkelly" PostInIP="198.51.100.150" PostTime="2022-11-28 11:03:29" />
+		<movimiento ValorDocId="6993943" IdTipoMovimiento="Reversion Debito" Fecha="2022-12-07" Monto="9" PostByUser="hardingmicheal" PostInIP="10.1.3.175" PostTime="2022-12-07 07:46:52" />
+		<movimiento ValorDocId="7890123" IdTipoMovimiento="Cumplir mes" Fecha="2022-12-14" Monto="1" PostByUser="UsuarioScripts" PostInIP="10.1.1.125" PostTime="2022-12-14 10:37:56" />
+		<movimiento ValorDocId="7517662" IdTipoMovimiento="Bono vacacional" Fecha="2022-12-17" Monto="8" PostByUser="andersondeborah" PostInIP="10.0.3.75" PostTime="2022-12-17 06:28:42" />
+		<movimiento ValorDocId="4567890" IdTipoMovimiento="Reversion Debito" Fecha="2022-12-17" Monto="10" PostByUser="mgarrison" PostInIP="192.168.7.150" PostTime="2022-12-17 15:18:38" />
+		<movimiento ValorDocId="8326328" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-01-08" Monto="6" PostByUser="mgarrison" PostInIP="10.0.1.25" PostTime="2023-01-08 05:09:15" />
+		<movimiento ValorDocId="8901234" IdTipoMovimiento="Reversion Debito" Fecha="2023-01-10" Monto="8" PostByUser="hardingmicheal" PostInIP="192.0.2.175" PostTime="2023-01-10 17:19:33" />
+		<movimiento ValorDocId="5566778" IdTipoMovimiento="Reversion de Credito" Fecha="2023-01-10" Monto="5" PostByUser="zkelly" PostInIP="10.2.3.255" PostTime="2023-01-10 17:38:25" />
+		<movimiento ValorDocId="6677889" IdTipoMovimiento="Bono vacacional" Fecha="2023-01-10" Monto="7" PostByUser="hardingmicheal" PostInIP="192.0.2.100" PostTime="2023-01-10 23:04:38" />
+		<movimiento ValorDocId="2233445" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-01-17" Monto="4" PostByUser="andersondeborah" PostInIP="10.0.2.700" PostTime="2023-01-17 10:54:51" />
+		<movimiento ValorDocId="1011123" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-01-29" Monto="2" PostByUser="hardingmicheal" PostInIP="203.0.113.200" PostTime="2023-01-29 06:28:42" />
+		<movimiento ValorDocId="2918773" IdTipoMovimiento="Reversion Debito" Fecha="2023-01-29" Monto="9" PostByUser="mgarrison" PostInIP="192.168.2.100" PostTime="2023-01-29 19:23:04" />
+		<movimiento ValorDocId="8403646" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-02-22" Monto="4" PostByUser="hardingmicheal" PostInIP="198.51.100.175" PostTime="2023-02-22 18:27:15" />
+		<movimiento ValorDocId="4510358" IdTipoMovimiento="Reversion de Credito" Fecha="2023-02-22" Monto="3" PostByUser="jgonzalez" PostInIP="10.2.3.255" PostTime="2023-02-22 23:40:23" />
+		<movimiento ValorDocId="6789012" IdTipoMovimiento="Cumplir mes" Fecha="2023-02-22" Monto="1" PostByUser="hardingmicheal" PostInIP="10.1.1.125" PostTime="2023-02-22 23:50:31" />
+		<movimiento ValorDocId="1122334" IdTipoMovimiento="Reversion de Credito" Fecha="2023-03-07" Monto="5" PostByUser="andersondeborah" PostInIP="203.0.113.175" PostTime="2023-03-07 21:27:56" />
+		<movimiento ValorDocId="4455667" IdTipoMovimiento="Bono vacacional" Fecha="2023-03-07" Monto="6" PostByUser="hardingmicheal" PostInIP="192.168.1.50" PostTime="2023-03-07 22:33:45" />
+		<movimiento ValorDocId="2161775" IdTipoMovimiento="Reversion Debito" Fecha="2023-03-08" Monto="4" PostByUser="jgonzalez" PostInIP="192.168.5.250" PostTime="2023-03-08 07:41:09" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Cumplir mes" Fecha="2023-03-09" Monto="1" PostByUser="jgonzalez" PostInIP="10.0.0.1" PostTime="2023-03-09 21:59:40" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-03-12" Monto="2" PostByUser="zkelly" PostInIP="192.0.2.250" PostTime="2023-03-12 17:22:01" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Reversion de Credito" Fecha="2023-03-23" Monto="3" PostByUser="UsuarioScripts" PostInIP="10.1.1.125" PostTime="2023-03-23 07:36:53" />
+		<movimiento ValorDocId="7788990" IdTipoMovimiento="Reversion Debito" Fecha="2023-03-28" Monto="7" PostByUser="hardingmicheal" PostInIP="203.0.113.175" PostTime="2023-03-28 16:25:13" />
+		<movimiento ValorDocId="7517662" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-03-28" Monto="3" PostByUser="zkelly" PostInIP="192.168.4.200" PostTime="2023-03-28 22:19:37" />
+		<movimiento ValorDocId="4567890" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-03-30" Monto="7" PostByUser="andersondeborah" PostInIP="10.2.3.255" PostTime="2023-03-30 06:44:19" />
+		<movimiento ValorDocId="1234567" IdTipoMovimiento="Reversion de Credito" Fecha="2023-03-30" Monto="9" PostByUser="zkelly" PostInIP="172.17.0.200" PostTime="2023-03-30 13:14:24" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Cumplir mes" Fecha="2023-04-11" Monto="1" PostByUser="jgonzalez" PostInIP="172.16.1.50" PostTime="2023-04-11 13:33:49" />
+		<movimiento ValorDocId="1896802" IdTipoMovimiento="Bono vacacional" Fecha="2023-04-12" Monto="5" PostByUser="jgonzalez" PostInIP="172.16.2.100" PostTime="2023-04-12 05:59:42" />
+		<movimiento ValorDocId="8403646" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-04-12" Monto="4" PostByUser="mgarrison" PostInIP="10.2.3.255" PostTime="2023-04-12 12:18:23" />
+		<movimiento ValorDocId="6789012" IdTipoMovimiento="Reversion de Credito" Fecha="2023-04-12" Monto="7" PostByUser="UsuarioScripts" PostInIP="192.168.5.250" PostTime="2023-04-12 16:39:42" />
+		<movimiento ValorDocId="7890123" IdTipoMovimiento="Bono vacacional" Fecha="2023-04-13" Monto="10" PostByUser="jgonzalez" PostInIP="10.0.3.75" PostTime="2023-04-13 19:20:51" />
+		<movimiento ValorDocId="1011123" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-04-18" Monto="6" PostByUser="hardingmicheal" PostInIP="172.17.3.150" PostTime="2023-04-18 05:54:28" />
+		<movimiento ValorDocId="6993943" IdTipoMovimiento="Reversion de Credito" Fecha="2023-04-18" Monto="8" PostByUser="andersondeborah" PostInIP="198.51.100.250" PostTime="2023-04-18 17:22:01" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Bono vacacional" Fecha="2023-04-22" Monto="6" PostByUser="UsuarioScripts" PostInIP="198.51.100.200" PostTime="2023-04-22 23:50:31" />
+		<movimiento ValorDocId="9900112" IdTipoMovimiento="Cumplir mes" Fecha="2023-04-23" Monto="1" PostByUser="mgarrison" PostInIP="10.0.1.25" PostTime="2023-04-23 12:09:34" />
+		<movimiento ValorDocId="6019592" IdTipoMovimiento="Reversion Debito" Fecha="2023-04-27" Monto="5" PostByUser="zkelly" PostInIP="192.168.9.50" PostTime="2023-04-27 10:29:11" />
+		<movimiento ValorDocId="4510358" IdTipoMovimiento="Cumplir mes" Fecha="2023-05-04" Monto="1" PostByUser="jgonzalez" PostInIP="192.168.6.200" PostTime="2023-05-04 19:04:56" />
+		<movimiento ValorDocId="4455667" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-05-05" Monto="4" PostByUser="jgonzalez" PostInIP="203.0.113.175" PostTime="2023-05-05 09:01:27" />
+		<movimiento ValorDocId="4567890" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-05-05" Monto="2" PostByUser="andersondeborah" PostInIP="10.0.0.1" PostTime="2023-05-05 10:37:56" />
+		<movimiento ValorDocId="1122334" IdTipoMovimiento="Bono vacacional" Fecha="2023-05-05" Monto="8" PostByUser="UsuarioScripts" PostInIP="172.17.3.150" PostTime="2023-05-05 14:53:01" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-05-05" Monto="1" PostByUser="hardingmicheal" PostInIP="192.0.2.200" PostTime="2023-05-05 18:09:57" />
+		<movimiento ValorDocId="8901234" IdTipoMovimiento="Reversion de Credito" Fecha="2023-05-17" Monto="4" PostByUser="mgarrison" PostInIP="203.0.113.1" PostTime="2023-05-17 07:48:33" />
+		<movimiento ValorDocId="2131415" IdTipoMovimiento="Cumplir mes" Fecha="2023-05-17" Monto="1" PostByUser="zkelly" PostInIP="203.0.113.150" PostTime="2023-05-17 11:50:43" />
+		<movimiento ValorDocId="2161775" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-05-21" Monto="3" PostByUser="hardingmicheal" PostInIP="203.0.113.175" PostTime="2023-05-21 11:04:16" />
+		<movimiento ValorDocId="4455667" IdTipoMovimiento="Bono vacacional" Fecha="2023-05-21" Monto="4" PostByUser="zkelly" PostInIP="192.0.2.250" PostTime="2023-05-21 14:45:39" />
+		<movimiento ValorDocId="7788990" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-05-21" Monto="5" PostByUser="jgonzalez" PostInIP="198.51.100.50" PostTime="2023-05-21 16:27:44" />
+		<movimiento ValorDocId="5678901" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-05-21" Monto="7" PostByUser="jgonzalez" PostInIP="203.0.113.1" PostTime="2023-05-21 17:45:21" />
+		<movimiento ValorDocId="9900112" IdTipoMovimiento="Bono vacacional" Fecha="2023-05-23" Monto="5" PostByUser="andersondeborah" PostInIP="198.51.100.1" PostTime="2023-05-23 21:59:40" />
+		<movimiento ValorDocId="1011123" IdTipoMovimiento="Cumplir mes" Fecha="2023-05-25" Monto="1" PostByUser="jgonzalez" PostInIP="10.0.0.1" PostTime="2023-05-25 05:54:28" />
+		<movimiento ValorDocId="7517662" IdTipoMovimiento="Reversion Debito" Fecha="2023-06-03" Monto="4" PostByUser="zkelly" PostInIP="10.0.2.50" PostTime="2023-06-03 07:36:53" />
+		<movimiento ValorDocId="3456789" IdTipoMovimiento="Bono vacacional" Fecha="2023-06-03" Monto="10" PostByUser="hardingmicheal" PostInIP="203.0.113.175" PostTime="2023-06-03 07:46:32" />
+		<movimiento ValorDocId="6993943" IdTipoMovimiento="Reversion Debito" Fecha="2023-06-03" Monto="6" PostByUser="hardingmicheal" PostInIP="192.168.4.200" PostTime="2023-06-03 13:50:22" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-06-10" Monto="3" PostByUser="mgarrison" PostInIP="172.16.0.1" PostTime="2023-06-10 06:44:19" />
+		<movimiento ValorDocId="8899001" IdTipoMovimiento="Bono vacacional" Fecha="2023-06-10" Monto="5" PostByUser="UsuarioScripts" PostInIP="192.0.2.150" PostTime="2023-06-10 16:39:42" />
+		<movimiento ValorDocId="7890123" IdTipoMovimiento="Cumplir mes" Fecha="2023-06-12" Monto="1" PostByUser="zkelly" PostInIP="192.168.8.100" PostTime="2023-06-12 12:33:15" />
+		<movimiento ValorDocId="2161775" IdTipoMovimiento="Reversion Debito" Fecha="2023-06-13" Monto="9" PostByUser="hardingmicheal" PostInIP="135.223.57.22" PostTime="2023-06-13 13:28:39" /> 
+		<movimiento ValorDocId="6677889" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-06-14" Monto="8" PostByUser="mgarrison" PostInIP="172.17.1.250" PostTime="2023-06-14 17:14:32" />
+		<movimiento ValorDocId="6019592" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-06-17" Monto="2" PostByUser="UsuarioScripts" PostInIP="10.2.1.225" PostTime="2023-06-17 23:56:37" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Cumplir mes" Fecha="2023-06-21" Monto="1" PostByUser="zkelly" PostInIP="192.168.4.200" PostTime="2023-06-21 19:04:56" />
+		<movimiento ValorDocId="5566778" IdTipoMovimiento="Reversion Debito" Fecha="2023-06-23" Monto="3" PostByUser="UsuarioScripts" PostInIP="203.0.113.150" PostTime="2023-06-23 19:52:44" />
+		<movimiento ValorDocId="4510358" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-07-03" Monto="3" PostByUser="hardingmicheal" PostInIP="143.42.131.166" PostTime="2023-07-03 17:07:39" />
+		<movimiento ValorDocId="1234567" IdTipoMovimiento="Cumplir mes" Fecha="2023-07-07" Monto="1" PostByUser="jgonzalez" PostInIP="203.0.113.200" PostTime="2023-07-07 09:25:41" />
+		<movimiento ValorDocId="3456789" IdTipoMovimiento="Reversion de Credito" Fecha="2023-07-08" Monto="8" PostByUser="mgarrison" PostInIP="192.168.0.1" PostTime="2023-07-08 04:28:55" />
+		<movimiento ValorDocId="9012345" IdTipoMovimiento="Cumplir mes" Fecha="2023-07-11" Monto="1" PostByUser="hardingmicheal" PostInIP="10.1.0.100" PostTime="2023-07-11 18:29:57" />
+		<movimiento ValorDocId="2918773" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-07-12" Monto="6" PostByUser="hardingmicheal" PostInIP="218.191.123.15" PostTime="2023-07-12 09:10:16" /> 
+		<movimiento ValorDocId="5678901" IdTipoMovimiento="Cumplir mes" Fecha="2023-07-13" Monto="1" PostByUser="jgonzalez" PostInIP="203.0.113.200" PostTime="2023-07-13 17:29:09" />
+		<movimiento ValorDocId="7788990" IdTipoMovimiento="Bono vacacional" Fecha="2023-07-19" Monto="5" PostByUser="zkelly" PostInIP="10.1.2.150" PostTime="2023-07-19 12:55:39" />
+		<movimiento ValorDocId="8901234" IdTipoMovimiento="Cumplir mes" Fecha="2023-07-22" Monto="1" PostByUser="hardingmicheal" PostInIP="192.168.1.50" PostTime="2023-07-22 14:03:54" />
+		<movimiento ValorDocId="9900112" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-07-22" Monto="4" PostByUser="andersondeborah" PostInIP="10.2.3.255" PostTime="2023-07-22 19:22:13" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Reversion Debito" Fecha="2023-07-30" Monto="6" PostByUser="UsuarioScripts" PostInIP="192.0.2.175" PostTime="2023-07-30 22:05:58" />
+		<movimiento ValorDocId="4455667" IdTipoMovimiento="Cumplir mes" Fecha="2023-08-08" Monto="1" PostByUser="zkelly" PostInIP="198.51.100.175" PostTime="2023-08-08 06:58:19" />
+		<movimiento ValorDocId="8899001" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-08-09" Monto="3" PostByUser="hardingmicheal" PostInIP="192.168.0.1" PostTime="2023-08-09 06:05:53" />
+		<movimiento ValorDocId="2131415" IdTipoMovimiento="Reversion de Credito" Fecha="2023-08-12" Monto="10" PostByUser="mgarrison" PostInIP="198.51.100.200" PostTime="2023-08-12 11:54:56" />
+		<movimiento ValorDocId="4567890" IdTipoMovimiento="Cumplir mes" Fecha="2023-08-14" Monto="1" PostByUser="mgarrison" PostInIP="10.2.2.250" PostTime="2023-08-14 15:39:11" />
+		<movimiento ValorDocId="1011123" IdTipoMovimiento="Reversion Debito" Fecha="2023-08-16" Monto="6" PostByUser="hardingmicheal" PostInIP="192.168.5.250" PostTime="2023-08-16 04:11:25" />
+		<movimiento ValorDocId="1122334" IdTipoMovimiento="Bono vacacional" Fecha="2023-08-16" Monto="7" PostByUser="hardingmicheal" PostInIP="192.168.9.50" PostTime="2023-08-16 15:36:29" />
+		<movimiento ValorDocId="9012345" IdTipoMovimiento="Reversion Debito" Fecha="2023-08-16" Monto="5" PostByUser="hardingmicheal" PostInIP="203.0.113.175" PostTime="2023-08-16 20:02:37" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-08-20" Monto="4" PostByUser="jgonzalez" PostInIP="203.0.113.175" PostTime="2023-08-20 22:32:01" />
+		<movimiento ValorDocId="6789012" IdTipoMovimiento="Cumplir mes" Fecha="2023-08-21" Monto="1" PostByUser="hardingmicheal" PostInIP="198.51.100.100" PostTime="2023-08-21 12:19:30" />
+		<movimiento ValorDocId="8403646" IdTipoMovimiento="Reversion Debito" Fecha="2023-08-25" Monto="8" PostByUser="jgonzalez" PostInIP="204.0.219.231" PostTime="2023-08-25 16:24:07" /> 
+		<movimiento ValorDocId="1896802" IdTipoMovimiento="Reversion de Credito" Fecha="2023-08-26" Monto="3" PostByUser="andersondeborah" PostInIP="203.0.113.175" PostTime="2023-08-26 10:22:56" />
+		<movimiento ValorDocId="5678901" IdTipoMovimiento="Bono vacacional" Fecha="2023-08-26" Monto="6" PostByUser="jgonzalez" PostInIP="203.0.113.150" PostTime="2023-08-26 15:42:38" />
+		<movimiento ValorDocId="6993943" IdTipoMovimiento="Cumplir mes" Fecha="2023-09-03" Monto="1" PostByUser="hardingmicheal" PostInIP="192.0.2.175" PostTime="2023-09-03 06:21:13" />
+		<movimiento ValorDocId="7788990" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-09-05" Monto="7" PostByUser="jgonzalez" PostInIP="10.1.1.125" PostTime="2023-09-05 18:15:51" />
+		<movimiento ValorDocId="7517662" IdTipoMovimiento="Reversion de Credito" Fecha="2023-09-11" Monto="5" PostByUser="mgarrison" PostInIP="172.17.1.250" PostTime="2023-09-11 04:09:56" />
+		<movimiento ValorDocId="8326328" IdTipoMovimiento="Bono vacacional" Fecha="2023-09-11" Monto="8" PostByUser="mgarrison" PostInIP="192.0.2.50" PostTime="2023-09-11 09:15:40" />
+		<movimiento ValorDocId="1234567" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-09-11" Monto="3" PostByUser="UsuarioScripts" PostInIP="192.0.2.100" PostTime="2023-09-11 11:50:43" />
+		<movimiento ValorDocId="8901234" IdTipoMovimiento="Bono vacacional" Fecha="2023-09-11" Monto="8" PostByUser="zkelly" PostInIP="10.2.1.225" PostTime="2023-09-11 19:22:17" />
+		<movimiento ValorDocId="2131415" IdTipoMovimiento="Reversion Debito" Fecha="2023-09-14" Monto="5" PostByUser="mgarrison" PostInIP="203.0.113.100" PostTime="2023-09-14 20:41:34" />
+		<movimiento ValorDocId="2918773" IdTipoMovimiento="Cumplir mes" Fecha="2023-09-18" Monto="1" PostByUser="hardingmicheal" PostInIP="192.0.2.175" PostTime="2023-09-18 04:09:56" />
+		<movimiento ValorDocId="2233445" IdTipoMovimiento="Reversion Debito" Fecha="2023-09-19" Monto="7" PostByUser="hardingmicheal" PostInIP="10.0.141.103" PostTime="2023-09-19 12:29:12" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Reversion de Credito" Fecha="2023-10-05" Monto="2" PostByUser="hardingmicheal" PostInIP="10.2.0.200" PostTime="2023-10-05 09:47:35" />
+		<movimiento ValorDocId="3456789" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-10-06" Monto="5" PostByUser="UsuarioScripts" PostInIP="10.0.1.25" PostTime="2023-10-06 21:29:14" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Cumplir mes" Fecha="2023-10-08" Monto="1" PostByUser="mgarrison" PostInIP="203.0.113.150" PostTime="2023-10-08 03:10:22" />
+		<movimiento ValorDocId="8899001" IdTipoMovimiento="Reversion Debito" Fecha="2023-10-08" Monto="4" PostByUser="mgarrison" PostInIP="10.2.0.200" PostTime="2023-10-08 20:02:37" />
+		<movimiento ValorDocId="5566778" IdTipoMovimiento="Bono vacacional" Fecha="2023-10-09" Monto="8" PostByUser="jgonzalez" PostInIP="192.0.2.250" PostTime="2023-10-09 04:28:55" />
+		<movimiento ValorDocId="5678901" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-10-09" Monto="2" PostByUser="jgonzalez" PostInIP="172.17.2.200" PostTime="2023-10-09 06:41:32" />
+		<movimiento ValorDocId="2161775" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-10-09" Monto="3" PostByUser="andersondeborah" PostInIP="192.0.2.250" PostTime="2023-10-09 09:21:47" />
+		<movimiento ValorDocId="1896802" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-10-09" Monto="1" PostByUser="UsuarioScripts" PostInIP="172.17.3.150" PostTime="2023-10-09 09:31:47" />
+		<movimiento ValorDocId="9012345" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-10-09" Monto="5" PostByUser="mgarrison" PostInIP="10.1.1.125" PostTime="2023-10-09 10:31:56" />
+		<movimiento ValorDocId="7890123" IdTipoMovimiento="Cumplir mes" Fecha="2023-10-10" Monto="1" PostByUser="mgarrison" PostInIP="10.1.3.175" PostTime="2023-10-10 07:41:09" />
+		<movimiento ValorDocId="8326328" IdTipoMovimiento="Reversion de Credito" Fecha="2023-10-11" Monto="3" PostByUser="hardingmicheal" PostInIP="172.17.0.200" PostTime="2023-10-11 15:47:55" />
+		<movimiento ValorDocId="2131415" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-10-14" Monto="4" PostByUser="jgonzalez" PostInIP="203.0.113.1" PostTime="2023-10-14 06:23:42" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Cumplir mes" Fecha="2023-10-19" Monto="1" PostByUser="UsuarioScripts" PostInIP="10.1.2.150" PostTime="2023-10-19 15:39:11" />
+		<movimiento ValorDocId="6789012" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-10-20" Monto="2" PostByUser="zkelly" PostInIP="198.51.100.200" PostTime="2023-10-20 09:21:42" />
+		<movimiento ValorDocId="5678901" IdTipoMovimiento="Reversion de Credito" Fecha="2023-10-25" Monto="5" PostByUser="hardingmicheal" PostInIP="172.17.1.250" PostTime="2023-10-25 14:33:18" />
+		<movimiento ValorDocId="2233445" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-10-25" Monto="6" PostByUser="hardingmicheal" PostInIP="203.0.113.175" PostTime="2023-10-25 17:47:29" />
+		<movimiento ValorDocId="6677889" IdTipoMovimiento="Cumplir mes" Fecha="2023-10-27" Monto="1" PostByUser="mgarrison" PostInIP="192.0.2.175" PostTime="2023-10-27 17:19:33" />
+		<movimiento ValorDocId="2918773" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-10-30" Monto="2" PostByUser="zkelly" PostInIP="220.164.108.231" PostTime="2023-10-30 03:55:57" /> 
+		<movimiento ValorDocId="6993943" IdTipoMovimiento="Bono vacacional" Fecha="2023-10-31" Monto="3" PostByUser="mgarrison" PostInIP="156.92.82.57" PostTime="2023-10-31 06:23:42" /> 
+        <movimiento ValorDocId="4510358" IdTipoMovimiento="Cumplir mes" Fecha="2023-10-31" Monto="1" PostByUser="andersondeborah" PostInIP="10.2.3.255" PostTime="2023-10-31 12:43:18" />
+		<movimiento ValorDocId="4455667" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-11-01" Monto="4" PostByUser="hardingmicheal" PostInIP="10.1.0.100" PostTime="2023-11-01 05:41:16" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Bono vacacional" Fecha="2023-11-01" Monto="5" PostByUser="jgonzalez" PostInIP="192.168.6.200" PostTime="2023-11-01 14:20:18" />
+		<movimiento ValorDocId="6019592" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-11-01" Monto="3" PostByUser="jgonzalez" PostInIP="10.1.1.125" PostTime="2023-11-01 14:59:44" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Reversion Debito" Fecha="2023-11-07" Monto="8" PostByUser="jgonzalez" PostInIP="192.168.8.100" PostTime="2023-11-07 07:15:08" />
+		<movimiento ValorDocId="8899001" IdTipoMovimiento="Reversion de Credito" Fecha="2023-11-07" Monto="2" PostByUser="hardingmicheal" PostInIP="10.2.3.255" PostTime="2023-11-07 09:25:41" />
+		<movimiento ValorDocId="6993943" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-11-20" Monto="6" PostByUser="hardingmicheal" PostInIP="4.176.52.1" PostTime="2023-11-20 23:31:41" /> 
+		<movimiento ValorDocId="8326328" IdTipoMovimiento="Venta de vacaciones" Fecha="2023-11-22" Monto="4" PostByUser="andersondeborah" PostInIP="218.213.110.23 2" PostTime="2023-11-22 00:23:53" /> 
+		<movimiento ValorDocId="8403646" IdTipoMovimiento="Reversion de Credito" Fecha="2023-12-07" Monto="5" PostByUser="zkelly" PostInIP="155.44.100.105" PostTime="2023-12-07 15:44:30" /> 
+		<movimiento ValorDocId="4567890" IdTipoMovimiento="Cumplir mes" Fecha="2023-12-12" Monto="1" PostByUser="zkelly" PostInIP="198.51.100.1" PostTime="2023-12-12 22:45:12" />
+		<movimiento ValorDocId="2131415" IdTipoMovimiento="Bono vacacional" Fecha="2023-12-13" Monto="4" PostByUser="jgonzalez" PostInIP="10.1.2.150" PostTime="2023-12-13 22:45:12" />
+		<movimiento ValorDocId="2233445" IdTipoMovimiento="Reversion Debito" Fecha="2023-12-18" Monto="5" PostByUser="jgonzalez" PostInIP="203.0.113.50" PostTime="2023-12-18 15:25:30" />
+		<movimiento ValorDocId="9900112" IdTipoMovimiento="Cumplir mes" Fecha="2023-12-19" Monto="1" PostByUser="zkelly" PostInIP="192.0.2.50" PostTime="2023-12-19 09:47:35" />
+		<movimiento ValorDocId="7890123" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-12-22" Monto="6" PostByUser="andersondeborah" PostInIP="172.17.2.200" PostTime="2023-12-22 11:03:29" />
+		<movimiento ValorDocId="5566778" IdTipoMovimiento="Reversion de Credito" Fecha="2023-12-22" Monto="3" PostByUser="hardingmicheal" PostInIP="192.168.3.150" PostTime="2023-12-22 18:29:57" />
+		<movimiento ValorDocId="4510358" IdTipoMovimiento="Bono vacacional" Fecha="2023-12-22" Monto="9" PostByUser="hardingmicheal" PostInIP="10.1.2.150" PostTime="2023-12-22 20:22:58" />
+		<movimiento ValorDocId="1011123" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2023-12-22" Monto="4" PostByUser="andersondeborah" PostInIP="172.16.2.100" PostTime="2023-12-22 22:13:16" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Reversion de Credito" Fecha="2023-12-27" Monto="5" PostByUser="hardingmicheal" PostInIP="136.103.23.170 " PostTime="2023-12-27 12:59:03" /> 
+        <movimiento ValorDocId="7788990" IdTipoMovimiento="Cumplir mes" Fecha="2023-12-29" Monto="1" PostByUser="UsuarioScripts" PostInIP="172.16.3.150" PostTime="2023-12-29 15:36:29" />
+		<movimiento ValorDocId="8899001" IdTipoMovimiento="Reversion Debito" Fecha="2024-01-06" Monto="7" PostByUser="UsuarioScripts" PostInIP="198.51.100.50" PostTime="2024-01-06 18:52:44" />
+		<movimiento ValorDocId="1122334" IdTipoMovimiento="Reversion de Credito" Fecha="2024-01-13" Monto="10" PostByUser="hardingmicheal" PostInIP="198.51.100.50" PostTime="2024-01-13 21:59:40" />
+		<movimiento ValorDocId="1896802" IdTipoMovimiento="Venta de vacaciones" Fecha="2024-01-15" Monto="1" PostByUser="hardingmicheal" PostInIP="198.51.100.1" PostTime="2024-01-15 03:10:22" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-01-15" Monto="3" PostByUser="jgonzalez" PostInIP="192.168.3.150" PostTime="2024-01-15 07:15:08" />
+		<movimiento ValorDocId="2918773" IdTipoMovimiento="Cumplir mes" Fecha="2024-01-16" Monto="1" PostByUser="mgarrison" PostInIP="172.16.1.50" PostTime="2024-01-16 13:33:49" />
+		<movimiento ValorDocId="7517662" IdTipoMovimiento="Venta de vacaciones" Fecha="2024-01-18" Monto="2" PostByUser="hardingmicheal" PostInIP="42.142.119.153" PostTime="2024-01-18 17:22:01" /> 
+		<movimiento ValorDocId="8901234" IdTipoMovimiento="Cumplir mes" Fecha="2024-01-18" Monto="1" PostByUser="hardingmicheal" PostInIP="10.1.1.125" PostTime="2024-01-18 18:47:14" />
+		<movimiento ValorDocId="2131415" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-01-20" Monto="5" PostByUser="jgonzalez" PostInIP="192.168.4.200" PostTime="2024-01-20 08:10:22" />
+		<movimiento ValorDocId="6019592" IdTipoMovimiento="Reversion de Credito" Fecha="2024-01-20" Monto="4" PostByUser="UsuarioScripts" PostInIP="172.16.2.100" PostTime="2024-01-20 19:33:58" />
+		<movimiento ValorDocId="4510358" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-01-20" Monto="3" PostByUser="jgonzalez" PostInIP="172.16.0.1" PostTime="2024-01-20 23:08:21" />
+		<movimiento ValorDocId="1234567" IdTipoMovimiento="Cumplir mes" Fecha="2024-02-02" Monto="1" PostByUser="hardingmicheal" PostInIP="10.2.2.250" PostTime="2024-02-02 09:31:47" />
+		<movimiento ValorDocId="7890123" IdTipoMovimiento="Bono vacacional" Fecha="2024-02-04" Monto="6" PostByUser="jgonzalez" PostInIP="192.0.2.200" PostTime="2024-02-04 12:12:54" />
+		<movimiento ValorDocId="7788990" IdTipoMovimiento="Reversion Debito" Fecha="2024-02-04" Monto="7" PostByUser="andersondeborah" PostInIP="10.2.0.200" PostTime="2024-02-04 18:13:29" />
+		<movimiento ValorDocId="5678901" IdTipoMovimiento="Bono vacacional" Fecha="2024-02-04" Monto="3" PostByUser="UsuarioScripts" PostInIP="198.51.100.100" PostTime="2024-02-04 22:21:03" />
+		<movimiento ValorDocId="8899001" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-02-05" Monto="5" PostByUser="UsuarioScripts" PostInIP="192.0.2.200" PostTime="2024-02-05 15:14:32" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Reversion de Credito" Fecha="2024-02-09" Monto="7" PostByUser="UsuarioScripts" PostInIP="10.2.0.200" PostTime="2024-02-09 09:56:17" />
+		<movimiento ValorDocId="9900112" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-02-09" Monto="7" PostByUser="andersondeborah" PostInIP="192.168.9.50" PostTime="2024-02-09 12:36:20" />
+		<movimiento ValorDocId="7517662" IdTipoMovimiento="Cumplir mes" Fecha="2024-02-10" Monto="1" PostByUser="zkelly" PostInIP="172.16.0.1" PostTime="2024-02-10 20:01:30" />
+		<movimiento ValorDocId="6789012" IdTipoMovimiento="Bono vacacional" Fecha="2024-02-17" Monto="5" PostByUser="hardingmicheal" PostInIP="203.0.113.150" PostTime="2024-02-17 03:21:47" />
+		<movimiento ValorDocId="2233445" IdTipoMovimiento="Cumplir mes" Fecha="2024-03-02" Monto="1" PostByUser="jgonzalez" PostInIP="10.2.0.200" PostTime="2024-03-02 14:45:39" />
+		<movimiento ValorDocId="5095109" IdTipoMovimiento="Bono vacacional" Fecha="2024-03-07" Monto="4" PostByUser="andersondeborah" PostInIP="208.0.4.33" PostTime="2024-03-07 08:19:28" /> 
+		<movimiento ValorDocId="1896802" IdTipoMovimiento="Cumplir mes" Fecha="2024-03-13" Monto="1" PostByUser="mgarrison" PostInIP="10.1.3.175" PostTime="2024-03-13 23:08:21" />
+		<movimiento ValorDocId="4455667" IdTipoMovimiento="Reversion Debito" Fecha="2024-03-15" Monto="6" PostByUser="jgonzalez" PostInIP="192.0.2.200" PostTime="2024-03-15 15:58:31" />
+		<movimiento ValorDocId="2918773" IdTipoMovimiento="Venta de vacaciones" Fecha="2024-03-16" Monto="3" PostByUser="andersondeborah" PostInIP="172.16.3.150" PostTime="2024-03-16 06:44:19" />
+		<movimiento ValorDocId="3344556" IdTipoMovimiento="Reversion de Credito" Fecha="2024-03-17" Monto="2" PostByUser="mgarrison" PostInIP="203.0.113.100" PostTime="2024-03-17 09:56:17" />
+		<movimiento ValorDocId="6677889" IdTipoMovimiento="Reversion Debito" Fecha="2024-03-21" Monto="7" PostByUser="zkelly" PostInIP="10.2.0.200" PostTime="2024-03-21 14:45:37" />
+		<movimiento ValorDocId="1011123" IdTipoMovimiento="Bono vacacional" Fecha="2024-04-08" Monto="5" PostByUser="zkelly" PostInIP="198.51.100.1" PostTime="2024-04-08 07:41:09" />
+		<movimiento ValorDocId="1234567" IdTipoMovimiento="Reversion Debito" Fecha="2024-04-08" Monto="8" PostByUser="andersondeborah" PostInIP="10.0.0.1" PostTime="2024-04-08 07:46:52" />
+		<movimiento ValorDocId="6019592" IdTipoMovimiento="Cumplir mes" Fecha="2024-04-21" Monto="1" PostByUser="UsuarioScripts" PostInIP="172.17.1.250" PostTime="2024-04-21 21:29:14" />
+		<movimiento ValorDocId="2233445" IdTipoMovimiento="Reversion de Credito" Fecha="2024-05-18" Monto="6" PostByUser="andersondeborah" PostInIP="203.0.113.1" PostTime="2024-05-18 04:21:30" />
+		<movimiento ValorDocId="8326328" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-05-18" Monto="3" PostByUser="UsuarioScripts" PostInIP="10.2.3.255" PostTime="2024-05-18 08:47:21" />
+		<movimiento ValorDocId="9900112" IdTipoMovimiento="Reversion Debito" Fecha="2024-06-05" Monto="8" PostByUser="jgonzalez" PostInIP="10.1.0.100" PostTime="2024-06-05 19:46:10" />
+		<movimiento ValorDocId="4510358" IdTipoMovimiento="Venta de vacaciones" Fecha="2024-06-08" Monto="5" PostByUser="andersondeborah" PostInIP="203.0.1.154" PostTime="2024-06-08 18:10:43" />
+		<movimiento ValorDocId="4567890" IdTipoMovimiento="Cumplir mes" Fecha="2024-06-09" Monto="1" PostByUser="jgonzalez" PostInIP="198.51.100.150" PostTime="2024-06-09 14:59:44" />
+		<movimiento ValorDocId="7890123" IdTipoMovimiento="Reversion de Credito" Fecha="2024-06-12" Monto="9" PostByUser="zkelly" PostInIP="172.17.2.200" PostTime="2024-06-12 08:09:51" />
+		<movimiento ValorDocId="6677889" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-06-12" Monto="6" PostByUser="jgonzalez" PostInIP="192.0.2.175" PostTime="2024-06-12 21:50:08" />
+		<movimiento ValorDocId="8901234" IdTipoMovimiento="Venta de vacaciones" Fecha="2024-06-26" Monto="7" PostByUser="jgonzalez" PostInIP="198.51.100.150" PostTime="2024-06-26 23:19:59" />
+		<movimiento ValorDocId="5566778" IdTipoMovimiento="Disfrute de vacaciones" Fecha="2024-07-07" Monto="4" PostByUser="jgonzalez" PostInIP="172.17.1.250" PostTime="2024-07-07 09:47:35" />
+		<movimiento ValorDocId="2345678" IdTipoMovimiento="Reversion Debito" Fecha="2024-07-12" Monto="3" PostByUser="andersondeborah" PostInIP="203.0.113.200" PostTime="2024-07-12 09:37:48" />
+		<movimiento ValorDocId="2161775" IdTipoMovimiento="Venta de vacaciones" Fecha="2024-08-01" Monto="5" PostByUser="jgonzalez" PostInIP="172.17.3.150" PostTime="2024-08-01 07:55:04" />
+		<movimiento ValorDocId="7788990" IdTipoMovimiento="Reversion de Credito" Fecha="2024-08-15" Monto="6" PostByUser="hardingmicheal" PostInIP="203.0.113.1" PostTime="2024-08-15 03:41:10" />
+		<movimiento ValorDocId="3456789" IdTipoMovimiento="Reversion Debito" Fecha="2024-08-15" Monto="7" PostByUser="hardingmicheal" PostInIP="10.1.0.100" PostTime="2024-08-15 12:02:08" />
+		<movimiento ValorDocId="6789012" IdTipoMovimiento="Reversion de Credito" Fecha="2024-08-15" Monto="4" PostByUser="hardingmicheal" PostInIP="192.168.6.200" PostTime="2024-08-15 12:27:30" />
+		<movimiento ValorDocId="1122334" IdTipoMovimiento="Reversion Debito" Fecha="2024-08-15" Monto="5" PostByUser="jgonzalez" PostInIP="203.0.113.175" PostTime="2024-08-15 21:57:12" />
+		<movimiento ValorDocId="3456789" IdTipoMovimiento="Venta de vacaciones" Fecha="2024-08-20" Monto="3" PostByUser="jgonzalez" PostInIP="10.1.2.150" PostTime="2024-08-20 22:43:37" />
+    </Movimientos> 
+    <Error> 
+        <error Codigo="50001" Descripcion="Username no existe"/> 
+        <error Codigo="50002" Descripcion="Password no existe"/> 
+        <error Codigo="50003" Descripcion="Login deshabilitado"/> 
+        <error Codigo="50004" Descripcion="Empleado con ValorDocumentoIdentidad ya existe en inserción"/> 
+        <error Codigo="50005" Descripcion="Empleado con mismo nombre ya existe en inserción"/> 
+        <error Codigo="50006" Descripcion="Empleado con ValorDocumentoIdentidad ya existe en actualizacion"/> 
+        <error Codigo="50007" Descripcion="Empleado con mismo nombre ya existe en actualización"/> 
+        <error Codigo="50008" Descripcion="Error de base de datos"/> 
+        <error Codigo="50009" Descripcion="Nombre de empleado no alfabético"/> 
+        <error Codigo="50010" Descripcion="Valor de documento de identidad no alfabético"/> 
+        <error Codigo="50011" Descripcion="Monto del movimiento rechazado pues si se aplicar el saldo seria negativo."/> 
+    </Error> 
+</Datos> 

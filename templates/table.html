@@ -16,9 +16,18 @@
             margin-bottom: 20px;
         }
 
+        .table-container {
+            width: 90%; /* Ajusta el ancho según tus necesidades */
+            max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
+            overflow-y: auto; /* Permite el desplazamiento vertical */
+            border: 1px solid #bb1515; /* Añadir un borde para visualización */
+            margin-bottom: 20px; /* Espacio entre la tabla y los botones */
+        }
+
         table {
             margin-bottom: 20px;
             border-collapse: collapse;
+            width: 100%; /* Asegura que la tabla ocupe todo el ancho del contenedor */
         }
 
         table, th, td {
@@ -89,32 +98,38 @@
         <button id="openModalBtn">Agregar Empleado</button>
     </div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>ID Puesto</th>
-                <th>Documento de Identidad</th>
-                <th>Nombre</th>
-                <th>Fecha de Contratación</th>
-                <th>Saldo Vacaciones</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in data %}
-            <tr>
-                <td>{{ row[0] }}</td>
-                <td>{{ row[1] }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-                <td>{{ row[4] }}</td>
-                <td>{{ row[5] }}</td>
-                <td>{{ row[6] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Puesto</th>
+                    <th>Documento de Identidad</th>
+                    <th>Fecha de Contratación</th>
+                    <th>Saldo Vacaciones</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+    </div>
+    <form action="{{ url_for('logout') }}" method="get">
+            <button type="submit">Logout</button>
+    </form>
 
     <!-- Modal -->
     <div class="modal" id="myModal">
