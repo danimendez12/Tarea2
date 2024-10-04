@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import pyodbc
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Necessary for using flash messages
+app.secret_key = 'your_secret_key'
 
 # Connection to SQL Server
 def get_db_connection():
@@ -22,58 +22,70 @@ def get_db_connection():
 # Main route
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    error_message = None
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        # Connect to the database
-        conn = get_db_connection()
+        conn = get_db_connection()  # Abrimos una vez la conexión
         if conn:
-            cursor = conn.cursor()
+            try:
+                cursor = conn.cursor()
 
-            # Prepare an output parameter
-            out_result = cursor.execute("DECLARE @OutResult BIT; "
-                                         "EXEC dbo.ValidarUsuario @Username=?, @Password=?, @OutResult=@OutResult OUTPUT; "
-                                         "SELECT @OutResult AS OutResult;",
-                                         (username, password)).fetchone()[0]
+                # Primera ejecución
+                cursor.execute("DECLARE @OutResult INT;"
+                               " EXEC dbo.ValidarUsuario @Username = ?, @Password = ?, @OutResult = @OutResult OUTPUT;"
+                               " SELECT @OutResult AS OutResult;", (username, password))
 
-            conn.close()
 
-            if out_result == 1:
-                return redirect(url_for('success'))
-            else:
-                flash('Credenciales inválidas. Intenta de nuevo.')
+                result = cursor.fetchone()
 
-        else:
-            flash('No se pudo conectar a la base de datos.')
+                if result:
+                    out_result = result[0]
+                else:
+                    out_result = None
 
-    return render_template('login.html')
+                if out_result == 0:
+                    return redirect(url_for('success'))
+                else:
+                    # Consultar el mensaje de error con la misma conexión
+                    cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
+                    error_result = cursor.fetchone()
+                    error_message = error_result[0] if error_result else 'Error desconocido.'
+                conn.commit()
 
-# Route for successful authentication
+            finally:
+                conn.close()
+
+    return render_template('login.html', error_message=error_message)  # Pasa el mensaje de error al template
+
+
+
 @app.route('/success')
 def success():
-    # Establecer la conexión
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Obtener el término de búsqueda si se proporciona
+
     search_query = request.form.get('search_query', '')
 
-    # Ejecutar la consulta para obtener los datos
+
     if search_query:
         cursor.execute('EXEC SearchEmployees @SearchTerm = ?', search_query)
     else:
-        # Consulta SQL para obtener todos los empleados
-        cursor.execute('SELECT * FROM empleado')
 
-    # Obtener los resultados
+        cursor.execute('EXEC ListarOrdenado')
+
+
     data = cursor.fetchall()
 
-    # Cerrar la conexión
+
     cursor.close()
     conn.close()
 
-    # Renderizar la plantilla con los datos
+
     return render_template('table.html', data=data, search_query=search_query)
 
 if __name__ == '__main__':

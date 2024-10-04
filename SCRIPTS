@@ -285,4 +285,146 @@ BEGIN
 END
 
 
+CREATE PROCEDURE dbo.ValidarYContarIntentos
+    @Username NVARCHAR(64),            -- Nombre de usuario
+    @Password NVARCHAR(256),           -- Contraseña
+    @TiempoLimite DATETIME,            -- Límite de tiempo para contar intentos fallidos
+    @TipoEventoLoginFallido INT,       -- Tipo de evento para login fallido
+    @NumeroIntentos INT OUTPUT,         -- Parámetro de salida para el número de intentos fallidos
+    @OutResult INT OUTPUT               -- Parámetro de salida para indicar el resultado de la validación
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    -- Inicializar los parámetros de salida
+    SET @NumeroIntentos = 0;
+    SET @OutResult = 0;
+
+    BEGIN TRY
+        -- Contar intentos fallidos en los últimos 30 minutos
+        SELECT @NumeroIntentos = COUNT(*)
+        FROM BitacoraEvento
+        WHERE IdPostByUser = (SELECT Id FROM Users WHERE Username = @Username)
+        AND PostTime > @TiempoLimite
+        AND idTipoEvento = @TipoEventoLoginFallido;
+
+        -- Comprobar si existe un usuario con el nombre de usuario proporcionado
+        DECLARE @UserCount INT;
+        SELECT @UserCount = COUNT(*)
+        FROM dbo.Usuario AS u
+        WHERE u.Username = @Username;
+
+        -- Si el usuario no existe, devolver error 50001
+        IF @UserCount = 0
+        BEGIN
+            SET @OutResult = 50001; -- Username no existe
+            RETURN;
+        END
+
+        -- Comprobar si la contraseña es correcta
+        DECLARE @PasswordCount INT;
+        SELECT @PasswordCount = COUNT(*)
+        FROM dbo.Usuario AS u
+        WHERE u.Username = @Username AND u.Password = @Password;
+
+        -- Si la contraseña es incorrecta, devolver error 50002
+        IF @PasswordCount = 0
+        BEGIN
+            -- Registrar intento de login fallido
+            INSERT INTO BitacoraEvento (idTipoEvento, Descripcion, IdPostByUser, PostInIP, PostTime)
+            VALUES (@TipoEventoLoginFallido, 'Login fallido para el usuario ' + @Username, (SELECT Id FROM Users WHERE Username = @Username), NULL, GETDATE());
+
+            SET @OutResult = 50002; -- Password no existe
+            RETURN;
+        END
+
+        -- Comprobar si el login está deshabilitado
+        DECLARE @LoginEnabled BIT;
+        SELECT @LoginEnabled = u.LoginEnabled  -- Suponiendo que hay una columna LoginEnabled en la tabla
+        FROM dbo.Usuario AS u
+        WHERE u.Username = @Username;
+
+        IF @LoginEnabled = 0
+        BEGIN
+            SET @OutResult = 50003; -- Login deshabilitado
+            RETURN;
+        END
+
+        -- Si el login es exitoso
+        SET @OutResult = 1; -- Credenciales válidas
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error occurred in dbo.ValidarYContarIntentos';
+        -- Guardar información del error en la tabla DBErrors
+        INSERT INTO dbo.DBError
+        (
+            UserName,
+            Number,
+            State,
+            Severity,
+            Line,
+            Proced,
+            Message,
+            DateTime
+        )
+        VALUES
+        (
+            @Username,                            -- Nombre de usuario
+            ERROR_NUMBER(),                       -- Número de error
+            ERROR_STATE(),                        -- Estado del error
+            ERROR_SEVERITY(),                     -- Severidad del error
+            ERROR_LINE(),                         -- Línea donde ocurrió el error
+            'dbo.ValidarYContarIntentos',       -- Nombre del procedimiento
+            ERROR_MESSAGE(),                      -- Mensaje del error
+            GETDATE()                             -- Fecha y hora actual
+        );
+
+        -- Manejo del error, establecer OutResult a 50008 como error de base de datos
+        SET @OutResult = 50008;
+    END CATCH;
+END;
+GO
+
+
+DECLARE @lo INT = 1, @hi INT;
+
+               -- Declarar la variable de tabla para almacenar los datos del XML
+               DECLARE @movimientosXML TABLE (
+                   Sec INT IDENTITY(1, 1),
+                   Nombre NVARCHAR(100),
+                   SalarioxHora DECIMAL(10, 2)
+               );
+
+               -- Cargar el XML desde el archivo
+               DECLARE @XMLDoc XML;
+
+               SET @XMLDoc = (SELECT * FROM OPENROWSET(BULK '/Users/danielmendez/Desktop/Tarea2/Datos.xml', SINGLE_BLOB) AS DatosXML);
+
+               -- Insertar los datos del XML en la tabla de variable
+               INSERT INTO @movimientosXML (Nombre, SalarioxHora)
+               SELECT
+                   P.value('@Nombre', 'NVARCHAR(100)') AS Nombre,
+                   P.value('@SalarioxHora', 'DECIMAL(10,2)') AS SalarioxHora
+               FROM @XMLDoc.nodes('/Datos/Puestos/Puesto') AS P(P);
+
+               -- Obtener el número máximo de registros insertados
+               SELECT @hi = MAX(Sec) FROM @movimientosXML;
+
+               WHILE (@lo <= @hi)
+               BEGIN
+                   DECLARE @campoNombre NVARCHAR(100);
+                   DECLARE @campoSalario DECIMAL(10, 2);
+
+                   -- Cargar en variables los campos de la tabla de variable
+                   SELECT
+                       @campoNombre = M.Nombre,
+                       @campoSalario = M.SalarioxHora
+                   FROM @movimientosXML AS M
+                   WHERE M.Sec = @lo;
+
+                   -- Ejecutar la inserción en la tabla Puestos
+                   INSERT INTO Puesto (Nombre, SalarioxHora)
+                   VALUES (@campoNombre, @campoSalario);
+
+                   SET @lo = @lo + 1;
+               END
