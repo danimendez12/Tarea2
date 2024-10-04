@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Empleado</title>
+</head>
+<body>
+    <h1>Insertar Nuevo Empleado</h1>
+    <form method="POST" action="{{ url_for('insertar_empleado') }}">
+
+
+        <label for="documento_identidad">Documento de Identidad (Solo números):</label>
+        <input type="text" id="documento_identidad" name="documento_identidad" required
+               pattern="\d+" title="Debe contener solo números"><br>
+
+
+        <label for="nombre">Nombre (Solo letras y espacios):</label>
+        <input type="text" id="nombre" name="nombre" required
+               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" title="Debe contener solo letras y espacios"><br>
+
+
+        <label for="id_puesto">Puesto:</label>
+        <select id="id_puesto" name="id_puesto" required>
+            {% for puesto in puestos %}
+                <option value="{{ puesto[0] }}">{{ puesto[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+
+        <button type="submit">Insertar Empleado</button>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
