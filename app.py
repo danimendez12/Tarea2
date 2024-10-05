@@ -184,9 +184,9 @@ def insertar_empleado():
 
         cursor.execute(
             "DECLARE @OutResult INT; "
-            "EXEC dbo.insertarEmpleado @IDpuesto = ?, @DocID = ?, @Nombre = ?, @FechaC = ?, @Saldo = ?, @EsActivo = ?, @outresult = @OutResult OUTPUT; "
+            "EXEC dbo.insertarEmpleado @IDpuesto = ?, @DocID = ?, @Nombre = ?, @FechaC = ?, @Saldo = ?, @EsActivo = ?,@username =?, @outresult = @OutResult OUTPUT; "
             "SELECT @OutResult AS OutResult;",
-            (id_puesto, doc_id, nombre, fecha_contratacion, saldo_vacaciones, es_activo)
+            (id_puesto, doc_id, nombre, fecha_contratacion, saldo_vacaciones, es_activo,user)
         )
 
 
@@ -201,7 +201,6 @@ def insertar_empleado():
         else:
 
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(5, 'Inserción no exitosa', user, request.remote_addr))
-
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
             error_result = cursor.fetchone()
             error_message = error_result[0] if error_result else 'Error desconocido.'
