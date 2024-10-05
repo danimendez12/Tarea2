@@ -85,6 +85,20 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        .modal-content input, .modal-content select {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            margin-left: 5%;
+        }
+
+        .modal-content select {
+            height: 40px;
+            font-size: 16px;
+        }
+
     </style>
 </head>
 <body>
@@ -135,14 +149,17 @@
     <div class="modal" id="myModal">
         <div class="modal-content">
             <h2>Agregar Empleado</h2>
-            <input type="text" placeholder="ID Puesto">
-            <input type="text" placeholder="Documento de Identidad">
-            <input type="text" placeholder="Nombre">
-            <input type="date" placeholder="Fecha de Contratación">
-            <input type="text" placeholder="Saldo Vacaciones">
-            <input type="text" placeholder="Estado">
+            <form action="{{ url_for('insertar_empleado') }}" method="POST">
+                <input type="text" name="doc_id" placeholder="Documento de Identidad" required>
+                <input type="text" name="nombre" placeholder="Nombre" required>
+                <select name="id_puesto" required>
+                    {% for puesto in puestos %}
+                        <option value="{{ puesto[0] }}">{{ puesto[1] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Guardar</button>
+            </form>
             <button id="closeModalBtn">Cerrar</button>
-            <button id="saveBtn">Guardar</button>
         </div>
     </div>
 

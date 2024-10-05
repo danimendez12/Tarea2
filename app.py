@@ -8,7 +8,7 @@ app.secret_key = 'your_secret_key'
 # Connection to SQL Server
 def get_db_connection():
     conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 17 for SQL Server};'
+        'DRIVER={ODBC Driver 18 for SQL Server};'
         'SERVER=mssql-180519-0.cloudclusters.net,10034;'
         'DATABASE=Base_de_datos;'
         'UID=Admin;'
@@ -131,12 +131,64 @@ def success():
 
     data = cursor.fetchall()
 
+    cursor.execute('EXEC dbo.ListarPuestos')
+    puestos = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
+    return render_template('table.html', data=data, search_query=search_query, puestos=puestos)
 
-    return render_template('table.html', data=data, search_query=search_query)
+
+@app.route('/insertar_empleado', methods=['POST'])
+def insertar_empleado():
+
+    id_puesto = request.form['id_puesto']
+    doc_id = request.form['doc_id']
+    nombre = request.form['nombre']
+
+    # Default para empleados nuevos
+    fecha_contratacion = datetime.now().date()
+    saldo_vacaciones = 0.0
+    es_activo = 1
+
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+
+        cursor.execute(
+            "DECLARE @OutResult INT; "
+            "EXEC insertarEmpleado @IDpuesto = ?, @DocID = ?, @Nombre = ?, @FechaC = ?, @Saldo = ?, @EsActivo = ?, @outresult = @OutResult OUTPUT; "
+            "SELECT @OutResult AS OutResult;",
+            (id_puesto, doc_id, nombre, fecha_contratacion, saldo_vacaciones, es_activo)
+        )
+
+
+        result = cursor.fetchone()
+        out_result = result[0] if result else None
+
+
+        if out_result == 0:
+            flash('Empleado insertado correctamente.')
+        else:
+            cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
+            error_result = cursor.fetchone()
+            error_message = error_result[0] if error_result else 'Error desconocido.'
+            flash(f'Error al insertar empleado: {error_message}')
+
+        conn.commit()
+
+    except Exception as e:
+        flash('Error al insertar empleado. Inténtalo de nuevo más tarde.')
+        print(f'Error en insertar_empleado: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+
+    return redirect(url_for('success'))
 
 
 @app.route('/logout')
