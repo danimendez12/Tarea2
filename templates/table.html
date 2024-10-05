@@ -10,33 +10,54 @@
             flex-direction: column;
             height: 100vh;
             margin: 0;
+            background-color: #f0f4f8; /* Color de fondo suave */
+            font-family: Arial, sans-serif; /* Fuente más moderna */
         }
 
         h1 {
             margin-bottom: 20px;
+            color: #333; /* Color de texto oscuro */
         }
+
 
         .table-container {
             width: 90%;
             max-height: 400px;
             overflow-y: auto;
-            border: 1px solid #bb1515;
+            border: 2px solid #007bff;
             margin-bottom: 20px;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra */
         }
 
         table {
             margin-bottom: 20px;
             border-collapse: collapse;
             width: 100%;
+            background-color: #fff; /* Fondo blanco para la tabla */
         }
 
         table, th, td {
-            border: 1px solid #bb1515;
+            border: 1px solid #007bff;
         }
 
         th, td {
             padding: 10px;
             text-align: center;
+        }
+
+        th {
+            background-color: #007bff; /* Color de fondo para encabezados */
+            color: white; /* Texto blanco en encabezados */
+            font-weight: bold; /* Negrita en encabezados */
+        }
+
+        td {
+            transition: background-color 0.3s; /* Transición suave */
+        }
+
+        td:hover {
+            background-color: #e0f7f5; /* Color de fondo al pasar el mouse */
         }
 
         .button-container {
@@ -49,6 +70,16 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            flex-grow: 1;
+            background-color: #007bff; /* Color de fondo para botones */
+            color: white; /* Texto blanco en botones */
+            border: none; /* Sin bordes */
+            border-radius: 5px; /* Bordes redondeados en botones */
+            transition: background-color 0.3s; /* Transición suave */
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Color más oscuro al pasar el mouse */
         }
 
         .modal {
@@ -60,44 +91,62 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo más oscuro para modal */
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
-            background-color: #458339;
+            background-color: #ffffff; /* Fondo blanco para contenido del modal */
             padding: 20px;
             border: 1px solid #888;
             width: 300px;
             text-align: center;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para el modal */
         }
 
-        .modal-content input {
-            width: 80%;
+        .modal-content input,
+        .modal-content select {
+            width: 90%;
             padding: 10px;
             margin-bottom: 10px;
             font-size: 16px;
+            margin-left: 5%;
+            border: 1px solid #ccc; /* Borde claro para inputs */
+            border-radius: 5px; /* Bordes redondeados en inputs */
+            transition: border-color 0.3s; /* Transición suave */
+        }
+
+        .modal-content input:focus,
+        .modal-content select:focus {
+            border-color: #007bff; /* Borde de color al enfocar */
+            outline: none; /* Sin contorno */
         }
 
         .modal-content button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            background-color: #007bff; /* Color de fondo para botones en el modal */
+            color: white; /* Texto blanco en botones */
+            border: none; /* Sin bordes */
+            border-radius: 5px; /* Bordes redondeados */
+            transition: background-color 0.3s; /* Transición suave */
         }
 
-        .modal-content input, .modal-content select {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            margin-left: 5%;
+        .modal-content button:hover {
+            background-color: #0056b3; /* Color más oscuro al pasar el mouse */
         }
 
-        .modal-content select {
-            height: 40px;
-            font-size: 16px;
+        .error-messages {
+            color: red; /* Cambia el color del texto a rojo */
+            list-style-type: none; /* Opcional: quita los puntos de la lista */
+            padding: 0; /* Elimina el padding de la lista */
+            margin: 0; /* Elimina el margin de la lista */
+            font-weight: bold; /* Opcional: hacer el texto más grueso */
         }
+
     </style>
 </head>
 <body>
@@ -121,31 +170,61 @@
                     <th>Fecha de Contratación</th>
                     <th>Saldo Vacaciones</th>
                     <th>Estado</th>
-                    <th>Acciones</th> <!-- Nueva columna para acciones -->
                 </tr>
             </thead>
             <tbody>
                 {% for row in data %}
-                <tr data-id="{{ row[2] }}"> <!-- Usar el documento como ID -->
+                <tr data-id="{{ row[2] }}" onclick="selectEmpleado('{{ row[2] }}')">
                     <td>{{ row[0] }}</td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
                     <td>{{ row[3] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td>
-                    <a href="{{ url_for('movimientos', documento_id=row[2]) }}">
-                        <button>Mostrar Movimientos</button>
-                    </a>
-                </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <form action="{{ url_for('logout') }}" method="get">
-            <button type="submit">Logout</button>
+
+   <div class="error">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="error-messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <form id="movimientosForm" method="GET">
+        <input type="hidden" id="selectedId" name="documento_id" value="">
+        <button type="submit" disabled id="movimientosBtn">Mostrar Movimientos</button>
+        <button type="button" disabled id="openMovimientoModalBtn">Insertar Movimiento</button>
     </form>
+
+    <form action="{{ url_for('logout') }}" method="get" style="position: absolute; top: 20px; right: 20px;">
+        <button type="submit">Logout</button>
+    </form>
+
+    <!-- Modal para insertar movimiento -->
+    <div class="modal" id="movimientoModal">
+        <div class="modal-content">
+            <h2>Insertar Movimiento</h2>
+            <form action="{{ url_for('insertar_movimiento') }}" method="POST">
+                <input type="hidden" name="id_empleado" id="id_empleado" value="{{ selectedEmpleadoId }}">
+                <select name="id_tipo_mov" required>
+                    {% for movimiento in movimientos %}
+                        <option value="{{ movimiento[0] }}">{{ movimiento[1] }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="monto" placeholder="Monto" required>
+                <button type="submit">Guardar</button>
+            </form>
+            <button class="closeModalBtn">Cerrar</button>
+        </div>
+    </div>
 
     <!-- Modal para agregar empleado -->
     <div class="modal" id="myModal">
@@ -161,11 +240,79 @@
                 </select>
                 <button type="submit">Guardar</button>
             </form>
-            <button id="closeModalBtn">Cerrar</button>
+            <button class="closeModalBtn">Cerrar</button>
         </div>
     </div>
 
+    <script>
+        // Función para manejar la selección de empleado
+        // Función para manejar la selección de empleado
+// Función para manejar la selección de empleado
+// Función para manejar la selección de empleado
+        let selectedEmpleadoId = null;
+
+        function selectEmpleado(documentoId) {
+            selectedEmpleadoId = documentoId;
+            document.getElementById('selectedId').value = documentoId;
+
+            // Habilitar ambos botones
+            document.getElementById('movimientosBtn').disabled = false;
+            document.getElementById('openMovimientoModalBtn').disabled = false;
+
+            const form = document.getElementById('movimientosForm');
+            form.action = '/movimientos/' + documentoId;  // Cambia la acción del formulario dinámicamente
+        }
+
+        // Función para abrir el modal de insertar movimiento
+        document.getElementById('openMovimientoModalBtn').onclick = function() {
+            const selectedEmpleadoId = document.getElementById('selectedId').value;
+            if (selectedEmpleadoId) {
+                document.getElementById('id_empleado').value = selectedEmpleadoId;
+                document.getElementById('movimientoModal').style.display = 'flex';
+            } else {
+                alert('Selecciona un empleado primero.');
+            }
+        };
+
+        // Función para abrir el modal de agregar empleado
+        document.getElementById('openModalBtn').onclick = function() {
+            document.getElementById('myModal').style.display = 'flex';
+        };
+
+        // Función para cerrar los modales
+        function closeModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        // Cerrar el modal de movimiento
+        document.querySelectorAll('.closeModalBtn').forEach(button => {
+            button.onclick = function() {
+                const modal = button.closest('.modal');
+                closeModal(modal);
+            };
+        });
+
+        // Cerrar el modal si se hace clic fuera de él
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    closeModal(modal);
+                }
+            });
 
 
+        };
+
+        window.onload = function() {
+            const errorMessagesDiv = document.getElementById('errorMessages');
+            if (errorMessagesDiv) {
+                // Eliminar todos los hijos de errorMessagesDiv
+                errorMessagesDiv.innerHTML = '';
+            }
+        };
+
+    </script>
 </body>
 </html>
+

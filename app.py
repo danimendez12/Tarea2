@@ -8,7 +8,7 @@ app.secret_key = 'your_secret_key'
 # Connection to SQL Server
 def get_db_connection():
     conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 18 for SQL Server};'
+        'DRIVER={ODBC Driver 17 for SQL Server};'
         'SERVER=mssql-180519-0.cloudclusters.net,10034;'
         'DATABASE=Base_de_datos;'
         'UID=Admin;'
@@ -156,11 +156,13 @@ def success():
 
     cursor.execute('EXEC dbo.ListarPuestos')
     puestos = cursor.fetchall()
+    cursor.execute('EXEC dbo.ListarMovimientos')
+    movimientos = cursor.fetchall()
     conn.commit()
     cursor.close()
     conn.close()
 
-    return render_template('table.html', data=data, search_query=search_query, puestos=puestos)
+    return render_template('table.html', data=data, search_query=search_query, puestos=puestos,movimientos=movimientos)
 
 
 @app.route('/insertar_empleado', methods=['POST'])
@@ -250,38 +252,33 @@ def insertar_movimiento():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    try:
 
-        cursor.execute(
-            "DECLARE @OutResult INT; "
-            "EXEC dbo.insertarMovimiento @IdEmpleado = ?, @IdTipoMov = ?, @Fecha = ?, @Monto = ?, @IdUser = ?, @IP = ?, @outresult = @OutResult OUTPUT; "
-            "SELECT @OutResult AS OutResult;",
-            (id_empleado, id_tipo_mov, fecha, monto, user, ip)
-        )
 
-        result = cursor.fetchone()
-        out_result = result[0] if result else None
+    cursor.execute(
+        "DECLARE @OutResult INT; "
+        "EXEC dbo.insertarMovimiento @IdEmpleado = ?, @IdTipoMov = ?, @Fecha = ?, @Monto = ?, @IdUser = ?, @IP = ?, @outresult = @OutResult OUTPUT; "
+        "SELECT @OutResult AS OutResult;",
+        (id_empleado, id_tipo_mov, fecha, monto, user, ip)
+    )
 
-        if out_result == 0:
+    result = cursor.fetchone()
+    out_result = result[0] if result else None
 
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 14, @Descripcion = 'Insertar movimiento exitoso', @IdPostBY = ?, @Post = ?", (user, ip))
-            flash('Movimiento insertado correctamente.')
-        else:
+    if out_result == 0:
 
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 13, @Descripcion = 'Intento de insertar movimiento', @IdPostBY = ?, @Post = ?",(user, ip))
-            cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
-            error_result = cursor.fetchone()
-            error_message = error_result[0] if error_result else 'Error desconocido.'
-            flash(f'Error al insertar movimiento: {error_message}')
+        cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 14, @Descripcion = 'Insertar movimiento exitoso', @IdPostBY = ?, @Post = ?", (user, ip))
+        flash('Movimiento insertado correctamente.')
+    else:
 
-        conn.commit()
+        cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 13, @Descripcion = 'Intento de insertar movimiento', @IdPostBY = ?, @Post = ?",(user, ip))
+        cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
+        error_result = cursor.fetchone()
+        error_message = error_result[0] if error_result else 'Error desconocido.'
+        flash(f'Error al insertar movimiento: {error_message}')
 
-    except Exception as e:
-        flash('Error al insertar movimiento. Inténtalo de nuevo más tarde.')
-        print(f'Error en insertar_movimiento: {e}')
-    finally:
-        cursor.close()
-        conn.close()
+    conn.commit()
+
+
 
     return redirect(url_for('success'))
 
