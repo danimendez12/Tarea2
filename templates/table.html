@@ -17,17 +17,17 @@
         }
 
         .table-container {
-            width: 90%; /* Ajusta el ancho según tus necesidades */
-            max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
-            overflow-y: auto; /* Permite el desplazamiento vertical */
-            border: 1px solid #bb1515; /* Añadir un borde para visualización */
-            margin-bottom: 20px; /* Espacio entre la tabla y los botones */
+            width: 90%;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #bb1515;
+            margin-bottom: 20px;
         }
 
         table {
             margin-bottom: 20px;
             border-collapse: collapse;
-            width: 100%; /* Asegura que la tabla ocupe todo el ancho del contenedor */
+            width: 100%;
         }
 
         table, th, td {
@@ -42,7 +42,7 @@
         .button-container {
             display: flex;
             gap: 20px;
-            margin-bottom: 20px; /* Espacio entre los botones y la tabla */
+            margin-bottom: 20px;
         }
 
         button {
@@ -98,7 +98,6 @@
             height: 40px;
             font-size: 16px;
         }
-
     </style>
 </head>
 <body>
@@ -113,7 +112,7 @@
     </div>
 
     <div class="table-container">
-        <table>
+        <table id="empleadoTable">
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -122,30 +121,33 @@
                     <th>Fecha de Contratación</th>
                     <th>Saldo Vacaciones</th>
                     <th>Estado</th>
+                    <th>Acciones</th> <!-- Nueva columna para acciones -->
                 </tr>
             </thead>
             <tbody>
                 {% for row in data %}
-                <tr>
+                <tr data-id="{{ row[2] }}"> <!-- Usar el documento como ID -->
                     <td>{{ row[0] }}</td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
                     <td>{{ row[3] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
+                    <td>
+                    <a href="{{ url_for('movimientos', documento_id=row[2]) }}">
+                        <button>Mostrar Movimientos</button>
+                    </a>
+                </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-
-
     </div>
     <form action="{{ url_for('logout') }}" method="get">
             <button type="submit">Logout</button>
     </form>
 
-    <!-- Modal -->
+    <!-- Modal para agregar empleado -->
     <div class="modal" id="myModal">
         <div class="modal-content">
             <h2>Agregar Empleado</h2>
@@ -163,28 +165,7 @@
         </div>
     </div>
 
-    <script>
-        // Script para manejar el modal
-        const modal = document.getElementById('myModal');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
 
-        // Abre el modal
-        openModalBtn.onclick = function() {
-            modal.style.display = 'flex';
-        }
 
-        // Cierra el modal
-        closeModalBtn.onclick = function() {
-            modal.style.display = 'none';
-        }
-
-        // Cierra el modal si se hace clic fuera de él
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script>
 </body>
 </html>

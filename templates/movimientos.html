@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimientos</title>
+    <style>
+        /* Agrega algunos estilos para mejorar la presentación */
+        .header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #bb1515;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .button-container {
+            margin-bottom: 20px; /* Espacio entre el botón y la tabla */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #bb1515; /* Color de fondo */
+            color: white; /* Color del texto */
+            border: none; /* Sin borde */
+            border-radius: 5px; /* Bordes redondeados */
+        }
+
+        .no-movimientos {
+            color: red; /* Color del mensaje de error */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezados fuera de la tabla -->
+    <div class="header">
+        <h2>Detalles del Movimiento</h2>
+        {% if movimientos %}
+            <p><strong>Valor Documento de Identidad:</strong> {{ movimientos[0][0] }}</p>
+            <p><strong>Nombre:</strong> {{ movimientos[0][1] }}</p>
+            <p><strong>Saldo Vacaciones:</strong> {{ movimientos[0][2] }}</p>
+        {% else %}
+            <p class="no-movimientos">No hay movimientos disponibles para este empleado.</p>
+        {% endif %}
+    </div>
+
+    <!-- Botón de regresar -->
+    <div class="button-container">
+        <form action="{{ url_for('success') }}" method="get">
+            <button type="submit">Regresar</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Nuevo Saldo</th>
+                <th>Tipo de Movimiento</th>
+                <th>Usuario</th>
+                <th>IP</th>
+                <th>Estampa de tiempo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if movimientos %}
+                {% for movimiento in movimientos %}
+                <tr>
+                    <td>{{ movimiento[3] }}</td>
+                    <td>{{ movimiento[4] }}</td>
+                    <td>{{ movimiento[5] }}</td>
+                    <td>{{ movimiento[6] }}</td>
+                    <td>{{ movimiento[7] }}</td>
+                    <td>{{ movimiento[8] }}</td>
+                    <td>{{ movimiento[9] }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" class="no-movimientos">No hay movimientos disponibles.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+</body>
+</html>

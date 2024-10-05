@@ -428,3 +428,94 @@ DECLARE @lo INT = 1, @hi INT;
 
                    SET @lo = @lo + 1;
                END
+
+
+ DECLARE @movimientosXML TABLE (
+    IDempleado NVARCHAR(100),
+    Tipomovimiento NVARCHAR(100),
+    Fecha DATE,
+    Monto DECIMAL(10, 2),
+    IDPost NVARCHAR(100),
+    IP NVARCHAR(100),
+    FechaPost DATETIME
+);
+
+-- Insertar datos desde el XML en la tabla temporal
+INSERT INTO @movimientosXML (IDempleado, Tipomovimiento, Fecha, Monto, IDPost, IP, FechaPost)
+SELECT
+    M.value('@ValorDocId', 'NVARCHAR(100)') AS IDempleado,
+    M.value('@IdTipoMovimiento', 'NVARCHAR(100)') AS Tipomovimiento,
+    M.value('@Fecha', 'DATE') AS Fecha,
+    M.value('@Monto', 'DECIMAL(10,2)') AS Monto,
+    M.value('@PostByUser', 'NVARCHAR(100)') AS IDPost,
+    M.value('@PostInIP', 'NVARCHAR(100)') AS IP,
+    M.value('@PostTime', 'DATETIME') AS FechaPost
+FROM @XMLDoc.nodes('/Datos/Movimientos/movimiento') AS M(M);  -- Asegúrate de que el path sea correcto
+
+-- Insertar los datos en la tabla Movimientos usando un JOIN
+INSERT INTO Movimientos (IdEmpleado, IdTipoMovimiento, Fecha, Monto, NuevoSaldo, IdPostByUser, PostInIP, PostTime)
+SELECT
+    E.Id,
+    TM.Id,  -- Obtener el Id del tipo de movimiento
+    m.Fecha,
+    m.Monto,
+    CASE
+        WHEN TM.TipoAccion = 'Credito' THEN
+            ISNULL((SELECT SaldoVacaciones FROM dbo.Empleado WHERE ValorDocumentoIdentidad = m.IDempleado), 0) + m.Monto
+        WHEN TM.TipoAccion = 'Debito' THEN
+            ISNULL((SELECT SaldoVacaciones FROM dbo.Empleado WHERE ValorDocumentoIdentidad = m.IDempleado), 0) - m.Monto
+        ELSE
+            ISNULL((SELECT SaldoVacaciones FROM dbo.Empleado WHERE ValorDocumentoIdentidad = m.IDempleado), 0)
+    END AS NuevoSaldo,
+    U.id,
+    m.IP,
+    m.FechaPost
+FROM
+    @movimientosXML m
+JOIN
+    dbo.Empleado E ON E.ValorDocumentoIdentidad = m.IDempleado  -- Relación correcta con IDempleado
+JOIN
+    dbo.TipoDeMovimiento TM ON TM.Nombre = m.Tipomovimiento
+JOIN
+    dbo.Usuario U ON U.Username = m.IDPost;
+
+
+
+@app.route('/success', methods=['GET', 'POST'])
+def success():
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    user = session.get('username')
+    client_ip = request.remote_addr
+    search_query = request.form.get('search_query', '')
+    data = []
+
+    if search_query:
+        if search_query.isdigit():
+            cursor.execute('EXEC buscarDocumento @NumeroDocumento = ?', (search_query,))
+            cursor.execute(
+                "EXEC dbo.insertarBitacora @IDTipoE = 12, @Descripcion = ?, @IdPostBY = ?, @Post = ?",
+                (f"Búsqueda por documento: {search_query}", user, client_ip))
+            conn.commit()
+            data = cursor.fetchall()
+        else:
+            cursor.execute('EXEC buscarEmpleados @Caracter = ?', (search_query,))
+            cursor.execute(
+                "EXEC dbo.insertarBitacora @IDTipoE = 11, @Descripcion = ?, @IdPostBY = ?, @Post = ?",
+                (f"Búsqueda por nombre: {search_query}", user, client_ip))
+            conn.commit()
+            data = cursor.fetchall()
+    else:
+        cursor.execute('EXEC ListarOrdenado')
+        data = cursor.fetchall()
+
+
+
+    cursor.execute('EXEC dbo.ListarPuestos')
+    puestos = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('table.html', data=data, search_query=search_query, puestos=puestos)

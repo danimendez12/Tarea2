@@ -8,7 +8,7 @@ app.secret_key = 'your_secret_key'
 # Connection to SQL Server
 def get_db_connection():
     conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 18 for SQL Server};'
+        'DRIVER={ODBC Driver 17 for SQL Server};'
         'SERVER=mssql-180519-0.cloudclusters.net,10034;'
         'DATABASE=Base_de_datos;'
         'UID=Admin;'
@@ -77,22 +77,36 @@ def index():
                                    (username, tiempo_limite))
 
                     intentos_fallidos = cursor.fetchone()
+                    numero_intentos = intentos_fallidos[0] if intentos_fallidos else 0
 
-                    if intentos_fallidos:
-                        numero_intentos = intentos_fallidos[0]
-
-                    cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
+                    cursor.execute("EXEC dbo.consultarError @IDerror = ?", (out_result,))
                     error_result = cursor.fetchone()
-                    descripcion = f"Numero de intentos: {numero_intentos} y codigo de error: {error_result[0]}"
+                    descripcion = f"Numero de intentos: {numero_intentos + 1} y codigo de error: {out_result}"
 
                     cursor.execute(
                         "EXEC dbo.insertarBitacora @IDTipoE = 2, @Descripcion = ?, @IdPostBY = ?, @Post = ?",
-                        (descripcion,username, client_ip))
+                        (descripcion, username, client_ip))
 
-                    # Verificar si el número de intentos fallidos es mayor a límite 5
-                    if numero_intentos >= 5:
+                    error_message = error_result[0] if error_result else 'Error desconocido.'
 
-                        #LOGIN DESHABILITADO
+
+
+                else:
+                    #Se  ejecuta cuando recibe un codigo de error 50003 o 50008
+                    cursor.execute("DECLARE @NumeroIntentos INT;"
+                                   "EXEC dbo.ContarIntentosFallidosLogin @Username = ?, @TiempoLimite = ?,  @NumeroIntentos = @NumeroIntentos OUTPUT;"
+                                   "SELECT @NumeroIntentos AS NumeroIntentos;",
+                                   (username, tiempo_limite))
+
+                    intentos_fallidos = cursor.fetchone()
+
+
+                    numero_intentos = intentos_fallidos[0] if intentos_fallidos else 0
+
+
+                    if numero_intentos == 5:
+
+                        # LOGIN DESHABILITADO
                         cursor.execute(
                             "EXEC dbo.insertarBitacora @IDTipoE = 3, @Descripcion = 'Login Deshabilitado', @IdPostBY = ?, @Post = ?",
                             (username, client_ip))
@@ -101,10 +115,6 @@ def index():
                         cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
                         error_result = cursor.fetchone()
                         error_message = error_result[0] if error_result else 'Error desconocido.'
-                else:
-                    cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
-                    error_result = cursor.fetchone()
-                    error_message = error_result[0] if error_result else 'Error desconocido.'
 
                 conn.commit()
             finally:
@@ -114,18 +124,29 @@ def index():
 
 
 
-@app.route('/success')
+@app.route('/success', methods=['GET', 'POST'])
 def success():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-
+    user = session.get('username')
 
     search_query = request.form.get('search_query', '')
 
 
     if search_query:
-        cursor.execute('EXEC SearchEmployees @SearchTerm = ?', search_query)
+        if search_query.isdigit():
+            cursor.execute(
+                "EXEC dbo.insertarBitacora @IDTipoE = 12, @Descripcion = ?, @IdPostBY = ?, @Post = ?",
+                (f"Búsqueda por documento: {search_query}",user, request.remote_addr))
+
+            cursor.execute('EXEC buscarDocumento @NumeroDocumento = ?', (search_query,))
+
+        else:
+            cursor.execute(
+                "EXEC dbo.insertarBitacora @IDTipoE = 11, @Descripcion = ?, @IdPostBY = ?, @Post = ?",
+                (f"Búsqueda por nombre: {search_query}", user, request.remote_addr))
+            cursor.execute('EXEC buscarEmpleados @Caracter = ?', (search_query,))
     else:
 
         cursor.execute('EXEC ListarOrdenado')
@@ -135,7 +156,7 @@ def success():
 
     cursor.execute('EXEC dbo.ListarPuestos')
     puestos = cursor.fetchall()
-
+    conn.commit()
     cursor.close()
     conn.close()
 
@@ -150,7 +171,7 @@ def insertar_empleado():
     nombre = request.form['nombre']
     user = session.get('username')
 
-    # Default para empleados nuevos
+
     fecha_contratacion = datetime.now().date()
     saldo_vacaciones = 0.0
     es_activo = 1
@@ -199,23 +220,43 @@ def insertar_empleado():
     return redirect(url_for('success'))
 
 
+
+from flask import jsonify
+
+@app.route('/movimientos/<documento_id>', methods=['GET'])
+def movimientos(documento_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Ejecutar el procedimiento almacenado para obtener movimientos por documento
+    cursor.execute('EXEC ObtenerMovimientos @IdEmpleado = ?', (documento_id,))
+    movimientos = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    # Pasar los movimientos a la plantilla
+    return render_template('movimientos.html', movimientos=movimientos, documento_id=documento_id)
+
+
+
 @app.route('/logout')
 def logout():
     conn = get_db_connection()
     cursor = conn.cursor()
     client_ip = request.remote_addr
-    user = session.get('username')  # Asegúrate de tener una función que obtenga el usuario actual.
+    user = session.get('username')
 
     try:
         cursor.execute(
             "EXEC dbo.insertarBitacora @IDTipoE = 4, @Descripcion = 'Logout', @IdPostBY = ?, @Post = ?",
             (user, client_ip))
         conn.commit()
-        flash('Has cerrado sesión con éxito.')  # Mensaje de confirmación
+        flash('Has cerrado sesión con éxito.')
     except Exception as e:
-        # Manejo de errores: puedes registrar el error o mostrar un mensaje al usuario
-        flash('Error al cerrar sesión. Inténtalo de nuevo más tarde.')  # Mensaje de error
-        print(f'Error en logout: {e}')  # Registro del error en la consola o en un archivo de log
+
+        flash('Error al cerrar sesión. Inténtalo de nuevo más tarde.')
+        print(f'Error en logout: {e}')
     finally:
         cursor.close()
         conn.close()
