@@ -64,7 +64,7 @@ def index():
                 if out_result == 0:
                     session['username'] = username
 
-                    cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 1, @Descripcion = ' ', @IdPostBY = ?, @Post = ?",
+                    cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 1, @Descripcion = 'Login Exitoso', @IdPostBY = ?, @Post = ?",
                                    ( username, client_ip))
 
                     conn.commit()
@@ -88,11 +88,11 @@ def index():
                         "EXEC dbo.insertarBitacora @IDTipoE = 2, @Descripcion = ?, @IdPostBY = ?, @Post = ?",
                         (descripcion,username, client_ip))
 
-                    # Verificar si el número de intentos fallidos es mayor a un límite, por ejemplo 3
+                    # Verificar si el número de intentos fallidos es mayor a límite 5
                     if numero_intentos >= 5:
 
                         cursor.execute(
-                            "EXEC dbo.insertarBitacora @IDTipoE = 3, @Descripcion = ' ', @IdPostBY = ?, @Post = ?",
+                            "EXEC dbo.insertarBitacora @IDTipoE = 3, @Descripcion = 'Login Deshabilitado', @IdPostBY = ?, @Post = ?",
                             (username, client_ip))
                         error_message = f"Demasiados intentos fallidos. Login deshabilitado por 30 min"
                     else:
@@ -146,6 +146,7 @@ def insertar_empleado():
     id_puesto = request.form['id_puesto']
     doc_id = request.form['doc_id']
     nombre = request.form['nombre']
+    user = session.get('username')
 
     # Default para empleados nuevos
     fecha_contratacion = datetime.now().date()
@@ -160,7 +161,7 @@ def insertar_empleado():
 
         cursor.execute(
             "DECLARE @OutResult INT; "
-            "EXEC insertarEmpleado @IDpuesto = ?, @DocID = ?, @Nombre = ?, @FechaC = ?, @Saldo = ?, @EsActivo = ?, @outresult = @OutResult OUTPUT; "
+            "EXEC dbo.insertarEmpleado @IDpuesto = ?, @DocID = ?, @Nombre = ?, @FechaC = ?, @Saldo = ?, @EsActivo = ?, @outresult = @OutResult OUTPUT; "
             "SELECT @OutResult AS OutResult;",
             (id_puesto, doc_id, nombre, fecha_contratacion, saldo_vacaciones, es_activo)
         )
@@ -171,8 +172,11 @@ def insertar_empleado():
 
 
         if out_result == 0:
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 6, @Descripcion = 'Insercion exitosa', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
             flash('Empleado insertado correctamente.')
         else:
+
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(5, 'Inserción no exitosa', user, request.remote_addr))
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
             error_result = cursor.fetchone()
             error_message = error_result[0] if error_result else 'Error desconocido.'
@@ -200,7 +204,7 @@ def logout():
 
     try:
         cursor.execute(
-            "EXEC dbo.insertarBitacora @IDTipoE = 4, @Descripcion = ' ', @IdPostBY = ?, @Post = ?",
+            "EXEC dbo.insertarBitacora @IDTipoE = 4, @Descripcion = 'Logout', @IdPostBY = ?, @Post = ?",
             (user, client_ip))
         conn.commit()
         flash('Has cerrado sesión con éxito.')  # Mensaje de confirmación
