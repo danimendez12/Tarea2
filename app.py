@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, flash,sess
 import pyodbc
 from datetime import datetime, timedelta
 
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -65,6 +64,7 @@ def index():
                 if out_result == 0:
                     session['username'] = username
 
+
                     cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 1, @Descripcion = 'Login Exitoso', @IdPostBY = ?, @Post = ?",
                                    ( username, client_ip))
 
@@ -92,6 +92,7 @@ def index():
                     # Verificar si el número de intentos fallidos es mayor a límite 5
                     if numero_intentos >= 5:
 
+                        #LOGIN DESHABILITADO
                         cursor.execute(
                             "EXEC dbo.insertarBitacora @IDTipoE = 3, @Descripcion = 'Login Deshabilitado', @IdPostBY = ?, @Post = ?",
                             (username, client_ip))
@@ -173,11 +174,13 @@ def insertar_empleado():
 
 
         if out_result == 0:
+
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 6, @Descripcion = 'Insercion exitosa', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
             flash('Empleado insertado correctamente.')
         else:
 
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(5, 'Inserción no exitosa', user, request.remote_addr))
+
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
             error_result = cursor.fetchone()
             error_message = error_result[0] if error_result else 'Error desconocido.'
