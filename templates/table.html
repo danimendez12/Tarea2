@@ -176,7 +176,7 @@
                 {% for row in data %}
                 <tr data-id="{{ row[2] }}" onclick="selectEmpleado('{{ row[2] }}')">
                     <td>{{ row[0] }}</td>
-                    <td>{{ row[1] }}</td>
+                    <td data-puesto-id="{{ row[1] }}">{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
                     <td>{{ row[3] }}</td>
                     <td>{{ row[4] }}</td>
@@ -202,6 +202,7 @@
         <input type="hidden" id="selectedId" name="documento_id" value="">
         <button type="submit" disabled id="movimientosBtn">Mostrar Movimientos</button>
         <button type="button" disabled id="openMovimientoModalBtn">Insertar Movimiento</button>
+        <button type="button" disabled id="openActualizarModalBtn">Actualizar Empleado</button>
     </form>
 
     <form action="{{ url_for('logout') }}" method="get" style="position: absolute; top: 20px; right: 20px;">
@@ -244,23 +245,56 @@
         </div>
     </div>
 
+    <!-- Modal para actualizar empleado -->
+    <div class="modal" id="actualizarModal">
+        <div class="modal-content">
+            <h2>Actualizar Empleado</h2>
+            <form action="{{ url_for('actualizar_empleado') }}" method="POST">
+                <input type="hidden" name="id_empleado" id="id_empleado_update">
+                <input type="text" name="nuevo_nombre" id="nuevo_nombre" placeholder="Nuevo Nombre" required>
+                <input type="text" name="nuevo_doc_id" id="nuevo_doc_id" placeholder="Nuevo Documento de Identidad" required>
+                <select name="nuevo_id_puesto" id="nuevo_id_puesto" required>
+                    {% for puesto in puestos %}
+                        <option value="{{ puesto[0] }}" {% if puesto[0] == idPuesto %}selected{% endif %}>{{ puesto[1] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Guardar</button>
+            </form>
+            <button class="closeModalBtn">Cerrar</button>
+        </div>
+    </div>
+
     <script>
         // Función para manejar la selección de empleado
-        // Función para manejar la selección de empleado
-// Función para manejar la selección de empleado
-// Función para manejar la selección de empleado
         let selectedEmpleadoId = null;
 
         function selectEmpleado(documentoId) {
             selectedEmpleadoId = documentoId;
             document.getElementById('selectedId').value = documentoId;
 
-            // Habilitar ambos botones
+            // Habilitar botones
             document.getElementById('movimientosBtn').disabled = false;
             document.getElementById('openMovimientoModalBtn').disabled = false;
+            document.getElementById('openActualizarModalBtn').disabled = false;
 
             const form = document.getElementById('movimientosForm');
-            form.action = '/movimientos/' + documentoId;  // Cambia la acción del formulario dinámicamente
+            form.action = '/movimientos/' + documentoId; // Cambia la acción del formulario dinámicamente
+
+            // Obtener la fila seleccionada y sus valores para prellenar el formulario
+            const selectedRow = document.querySelector(`tr[data-id="${documentoId}"]`);
+            const nombre = selectedRow.children[0].textContent;
+            const docId = selectedRow.children[2].textContent;
+            const idPuesto = selectedRow.children[1].getAttribute('data-puesto-id');
+
+            // Prellenar los campos del modal de actualización con los datos del empleado seleccionado
+            document.getElementById('id_empleado_update').value = documentoId;
+            document.getElementById('nuevo_nombre').value = nombre;
+            document.getElementById('nuevo_doc_id').value = docId;
+
+            // Actualizar el select del modal para seleccionar el puesto correcto
+            document.querySelectorAll('#nuevo_id_puesto option').forEach(option => {
+                option.selected = option.value == idPuesto; // Compara y selecciona el idPuesto
+            });
         }
 
         // Función para abrir el modal de insertar movimiento
@@ -274,10 +308,22 @@
             }
         };
 
+        // Función para abrir el modal de actualizar empleado
+        document.getElementById('openActualizarModalBtn').onclick = function() {
+            const selectedEmpleadoId = document.getElementById('selectedId').value;
+            if (selectedEmpleadoId) {
+                document.getElementById('actualizarModal').style.display = 'flex';
+            } else {
+                alert('Selecciona un empleado primero.');
+            }
+        };
+
         // Función para abrir el modal de agregar empleado
         document.getElementById('openModalBtn').onclick = function() {
             document.getElementById('myModal').style.display = 'flex';
         };
+
+
 
         // Función para cerrar los modales
         function closeModal(modal) {

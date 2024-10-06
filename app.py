@@ -8,7 +8,7 @@ app.secret_key = 'your_secret_key'
 # Connection to SQL Server
 def get_db_connection():
     conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 17 for SQL Server};'
+        'DRIVER={ODBC Driver 18 for SQL Server};'
         'SERVER=mssql-180519-0.cloudclusters.net,10034;'
         'DATABASE=Base_de_datos;'
         'UID=Admin;'
@@ -156,8 +156,10 @@ def success():
 
     cursor.execute('EXEC dbo.ListarPuestos')
     puestos = cursor.fetchall()
+
     cursor.execute('EXEC dbo.ListarMovimientos')
     movimientos = cursor.fetchall()
+
     conn.commit()
     cursor.close()
     conn.close()
@@ -220,7 +222,46 @@ def insertar_empleado():
 
     return redirect(url_for('success'))
 
+@app.route('/actualizar_empleado', methods=['POST'])
+def actualizar_empleado():
 
+    id_empleado = request.form['id_empleado']
+    nuevo_nombre = request.form['nuevo_nombre']
+    nuevo_doc_id = request.form['nuevo_doc_id']
+    nuevo_id_puesto = request.form['nuevo_id_puesto']
+    user = session.get('username')
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("DECLARE @OutResult INT; EXEC dbo.actualizarEmpleado @IdEmpleado = ?, @NuevoNombre = ?, @NuevoDocID = ?, @NuevoIDPuesto = ?, @username = ?, @outresult = @OutResult OUTPUT; SELECT @OutResult AS OutResult;", (id_empleado, nuevo_nombre, nuevo_doc_id, nuevo_id_puesto, user))
+        result = cursor.fetchone()
+        out_result = result[0] if result else None
+
+        if out_result == 0:
+
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 8, @Descripcion = 'Update exitoso', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
+            flash('Empleado actualizado.')
+        else:
+
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(7, 'Update no exitoso', user, request.remote_addr))
+            cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
+            error_result = cursor.fetchone()
+            error_message = error_result[0] if error_result else 'Error desconocido.'
+            flash(f'Error al insertar empleado: {error_message}')
+
+        conn.commit()
+
+    except Exception as e:
+        flash('Error al actualizar empleado. Inténtalo de nuevo más tarde.')
+        print(f'Error en actualizar_empleado: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+
+    return redirect(url_for('success'))
 
 from flask import jsonify
 
