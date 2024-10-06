@@ -186,6 +186,10 @@ def insertar_empleado():
 
     try:
 
+        cursor.execute("DECLARE @NombrePuesto NVARCHAR(128); EXEC dbo.ConsultaPuesto @IdPuesto = ?, @NombrePuesto = @NombrePuesto OUTPUT; SELECT @NombrePuesto;",
+                       (id_puesto,))
+        nombre_puesto = cursor.fetchone()[0]
+
         cursor.execute(
             "DECLARE @OutResult INT; "
             "EXEC dbo.insertarEmpleado @IDpuesto = ?, @DocID = ?, @Nombre = ?, @FechaC = ?, @Saldo = ?, @EsActivo = ?,@username =?, @outresult = @OutResult OUTPUT; "
@@ -199,16 +203,17 @@ def insertar_empleado():
 
 
         if out_result == 0:
-
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 6, @Descripcion = 'Insercion exitosa', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
+            desc_exitosa = f"Doc. Identidad: {doc_id}, Nombre: {nombre}, Puesto: {nombre_puesto}"
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 6, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (desc_exitosa, user, request.remote_addr))
             flash('Empleado insertado correctamente.')
         else:
-
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(5, 'Inserción no exitosa', user, request.remote_addr))
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
-            error_result = cursor.fetchone()
-            error_message = error_result[0] if error_result else 'Error desconocido.'
-            flash(f'Error al insertar empleado: {error_message}')
+            msgError = cursor.fetchone()
+
+            desc_no_exitosa = f"Error: {out_result}, {msgError} Doc. Identidad: {doc_id}, Nombre: {nombre}, Puesto: {nombre_puesto}"
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(5, desc_no_exitosa, user, request.remote_addr))
+
+            flash(f'Error : {msgError}')
 
         conn.commit()
 
