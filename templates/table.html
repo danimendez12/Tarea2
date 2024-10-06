@@ -203,6 +203,7 @@
         <button type="submit" disabled id="movimientosBtn">Mostrar Movimientos</button>
         <button type="button" disabled id="openMovimientoModalBtn">Insertar Movimiento</button>
         <button type="button" disabled id="openActualizarModalBtn">Actualizar Empleado</button>
+        <button type="button" disabled id="openEliminarModalBtn">Eliminar Empleado</button>
     </form>
 
     <form action="{{ url_for('logout') }}" method="get" style="position: absolute; top: 20px; right: 20px;">
@@ -264,6 +265,22 @@
         </div>
     </div>
 
+    <!-- Modal para eliminar empleado -->
+    <div class="modal" id="eliminarModal">
+        <div class="modal-content">
+            <h2>Eliminar Empleado</h2>
+            <form action="{{ url_for('eliminar_empleado') }}" method="POST">
+                <input type="hidden" name="id_empleado" id="id_empleado_eliminar">
+                <input type="hidden" name="doc_id" id="doc_id_eliminar">
+                <p>Doc. Identidad: <span id="doc_id_display"></span></p>
+                <p>Nombre: <span id="nombre_display"></span></p>
+                <p>¿Está seguro de eliminar a este empleado?</p>
+                <button type="submit">Eliminar</button>
+            </form>
+            <button class="closeModalBtn">Cerrar</button>
+        </div>
+    </div>
+
     <script>
         // Función para manejar la selección de empleado
         let selectedEmpleadoId = null;
@@ -276,6 +293,7 @@
             document.getElementById('movimientosBtn').disabled = false;
             document.getElementById('openMovimientoModalBtn').disabled = false;
             document.getElementById('openActualizarModalBtn').disabled = false;
+            document.getElementById('openEliminarModalBtn').disabled = false;
 
             const form = document.getElementById('movimientosForm');
             form.action = '/movimientos/' + documentoId; // Cambia la acción del formulario dinámicamente
@@ -323,6 +341,26 @@
             document.getElementById('myModal').style.display = 'flex';
         };
 
+        // Función para abrir el modal de eliminar empleado
+        document.getElementById('openEliminarModalBtn').onclick = function() {
+            const selectedEmpleadoId = document.getElementById('selectedId').value;
+            const selectedDocId = document.getElementById('nuevo_doc_id').value;
+            const selectedNombre = document.getElementById('nuevo_nombre').value;
+
+            if (selectedEmpleadoId) {
+                // Rellenar los campos ocultos
+                document.getElementById('id_empleado_eliminar').value = selectedEmpleadoId;
+                document.getElementById('doc_id_eliminar').value = selectedDocId;
+
+                // Mostrar el documento de identidad y nombre en el modal
+                document.getElementById('doc_id_display').textContent = selectedDocId;
+                document.getElementById('nombre_display').textContent = selectedNombre;
+
+                document.getElementById('eliminarModal').style.display = 'flex';
+            } else {
+                alert('Selecciona un empleado primero.');
+            }
+        };
 
 
         // Función para cerrar los modales

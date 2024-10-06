@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash,session
+from flask import Flask, render_template, request, redirect, url_for, flash,session, jsonify
 import pyodbc
 from datetime import datetime, timedelta
 
@@ -263,7 +263,44 @@ def actualizar_empleado():
 
     return redirect(url_for('success'))
 
-from flask import jsonify
+@app.route('/eliminar_empleado', methods=['POST'])
+def eliminar_empleado():
+
+    id_empleado = request.form['id_empleado']
+    doc_id = request.form['doc_id']
+    user = session.get('username')
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("DECLARE @OutResult INT; EXEC dbo.eliminarEmpleado @IdEmpleado = ?, @DocId = ?, @username = ?, @outresult = @OutResult OUTPUT; SELECT @OutResult AS OutResult;", (id_empleado, doc_id, user))
+
+        result = cursor.fetchone()
+        out_result = result[0] if result else None
+
+        if out_result == 0:
+
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 10, @Descripcion = 'Borrado exitoso', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
+            flash('Empleado eliminado.')
+        else:
+
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 9, @Descripcion = 'Intento de borrado', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
+            cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
+            error_result = cursor.fetchone()
+            error_message = error_result[0] if error_result else 'Error desconocido.'
+            flash(f'Error al eliminar empleado: {error_message}')
+
+        conn.commit()
+
+    except Exception as e:
+        flash('Error al eliminar empleado. Inténtalo de nuevo más tarde.')
+        print(f'Error en eliminar_empleado: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('success'))
 
 @app.route('/movimientos/<documento_id>', methods=['GET'])
 def movimientos(documento_id):
