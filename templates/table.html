@@ -177,7 +177,7 @@
             </thead>
             <tbody>
                 {% for row in data %}
-                <tr data-id="{{ row[2] }}" onclick="selectEmpleado('{{ row[2] }}')">
+                <tr data-id="{{ row[2] }}" data-puesto-id="{{ row[1] }}" onclick="selectEmpleado('{{ row[2] }}')">
                     <td>{{ row[0] }}</td>
 
                     <td>{{ row[2] }}</td>
@@ -249,23 +249,23 @@
     </div>
 
     <!-- Modal para actualizar empleado -->
-    <div class="modal" id="actualizarModal">
-        <div class="modal-content">
-            <h2>Actualizar Empleado</h2>
-            <form action="{{ url_for('actualizar_empleado') }}" method="POST">
-                <input type="hidden" name="id_empleado" id="id_empleado_update">
-                <input type="text" name="nuevo_nombre" id="nuevo_nombre" placeholder="Nuevo Nombre" required>
-                <input type="text" name="nuevo_doc_id" id="nuevo_doc_id" placeholder="Nuevo Documento de Identidad" required>
-                <select name="nuevo_id_puesto" id="nuevo_id_puesto" required>
-                    {% for puesto in puestos %}
-                        <option value="{{ puesto[0] }}" {% if puesto[0] == idPuesto %}selected{% endif %}>{{ puesto[1] }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Guardar</button>
-            </form>
-            <button class="closeModalBtn">Cerrar</button>
+        <div class="modal" id="actualizarModal">
+            <div class="modal-content">
+                <h2>Actualizar Empleado</h2>
+                <form action="{{ url_for('actualizar_empleado') }}" method="POST">
+                    <input type="hidden" name="id_empleado" id="id_empleado_update">
+                    <input type="text" name="nuevo_nombre" id="nuevo_nombre" placeholder="Nuevo Nombre" required>
+                    <input type="text" name="nuevo_doc_id" id="nuevo_doc_id" placeholder="Nuevo Documento de Identidad" required>
+                    <select name="nuevo_id_puesto" id="nuevo_id_puesto" required>
+                        {% for puesto in puestos %}
+                            <option value="{{ puesto[0] }}" {% if puesto[0] == idPuesto %}selected{% endif %}>{{ puesto[1] }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Guardar</button>
+                </form>
+                <button class="closeModalBtn">Cerrar</button>
+            </div>
         </div>
-    </div>
 
     <!-- Modal para eliminar empleado -->
     <div class="modal" id="eliminarModal">
@@ -288,16 +288,16 @@
         let selectedEmpleadoId = null;
 
         function selectEmpleado(documentoId) {
+            const selectedRow = document.querySelector(`tr[data-id="${documentoId}"]`);
 
-
+            // Quitar selección de la fila anterior
             const previousSelectedRow = document.querySelector('.selected');
             if (previousSelectedRow) {
-                previousSelectedRow.classList.remove('selected'); // Quitar la clase de la fila previamente seleccionada
+                previousSelectedRow.classList.remove('selected');
             }
 
             // Marcar la nueva fila seleccionada
-            const selectedRow = document.querySelector(`tr[data-id="${documentoId}"]`);
-            selectedRow.classList.add('selected'); // Agregar la clase a la fila seleccionada
+            selectedRow.classList.add('selected');
 
             selectedEmpleadoId = documentoId;
             document.getElementById('selectedId').value = documentoId;
@@ -311,10 +311,9 @@
             const form = document.getElementById('movimientosForm');
             form.action = '/movimientos/' + documentoId; // Cambia la acción del formulario dinámicamente
 
-
             const nombre = selectedRow.children[0].textContent;
-            const docId = selectedRow.children[2].textContent;
-            const idPuesto = selectedRow.children[1].getAttribute('data-puesto-id');
+            const docId = selectedRow.children[1].textContent; // Cambiado de [2] a [1]
+            const idPuesto = selectedRow.getAttribute('data-puesto-id'); // Asegúrate que este atributo esté presente
 
             // Prellenar los campos del modal de actualización con los datos del empleado seleccionado
             document.getElementById('id_empleado_update').value = documentoId;
@@ -323,9 +322,10 @@
 
             // Actualizar el select del modal para seleccionar el puesto correcto
             document.querySelectorAll('#nuevo_id_puesto option').forEach(option => {
-                option.selected = option.value == idPuesto; // Compara y selecciona el idPuesto
+                option.selected = option.value == idPuesto;
             });
         }
+
 
         function consultarEmpleado() {
             const documentoId = document.getElementById('selectedId').value;

@@ -48,6 +48,7 @@ def index():
 
 
 
+
                 # Primera ejecución
                 cursor.execute("DECLARE @OutResult INT;"
                                " EXEC dbo.ValidarUsuario @Username = ?, @Password = ?, @OutResult = @OutResult OUTPUT;"
@@ -229,7 +230,6 @@ def insertar_empleado():
 
 @app.route('/actualizar_empleado', methods=['POST'])
 def actualizar_empleado():
-
     id_empleado = request.form['id_empleado']
     nuevo_nombre = request.form['nuevo_nombre']
     nuevo_doc_id = request.form['nuevo_doc_id']
@@ -240,19 +240,39 @@ def actualizar_empleado():
     cursor = conn.cursor()
 
     try:
-        cursor.execute("DECLARE @OutResult INT; EXEC dbo.actualizarEmpleado @IdEmpleado = ?, @NuevoNombre = ?, @NuevoDocID = ?, @NuevoIDPuesto = ?, @username = ?, @outresult = @OutResult OUTPUT; SELECT @OutResult AS OutResult;", (id_empleado, nuevo_nombre, nuevo_doc_id, nuevo_id_puesto, user))
+        # Consultar el empleado para obtener los datos requeridos
+        cursor.execute('EXEC dbo.consultarEmpleado @EmpleadoID = ?, @username = ?', (id_empleado, user))
+        empleado = cursor.fetchone()
+
+        # Verificar que el empleado fue encontrado
+        if not empleado:
+            flash('Empleado no encontrado.')
+            return redirect(url_for('success'))
+
+        # Asignar variables de empleado
+        nombre_empleado = empleado[1]
+        puesto_empleado = empleado[2]
+        saldo_vacaciones = empleado[3]
+
+        # Actualizar el empleado
+        cursor.execute(
+            "DECLARE @OutResult INT; EXEC dbo.actualizarEmpleado @IdEmpleado = ?, @NuevoNombre = ?, @NuevoDocID = ?, @NuevoIDPuesto = ?, @username = ?, @outresult = @OutResult OUTPUT; SELECT @OutResult AS OutResult;",
+            (id_empleado, nuevo_nombre, nuevo_doc_id, nuevo_id_puesto, user)
+        )
         result = cursor.fetchone()
         out_result = result[0] if result else None
 
+        # Construir la descripción
         if out_result == 0:
-
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 8, @Descripcion = 'Update exitoso', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
+            DESCRIPCION = f'{id_empleado},{nombre_empleado},{puesto_empleado},{nuevo_doc_id},{nuevo_id_puesto},{saldo_vacaciones}'
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 8, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (DESCRIPCION, user, request.remote_addr))
             flash('Empleado actualizado.')
         else:
-
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(7, 'Update no exitoso', user, request.remote_addr))
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
             error_result = cursor.fetchone()
+            DESCRIPCION = f'{error_result},{id_empleado},{nombre_empleado},{puesto_empleado},{nuevo_doc_id},{nuevo_id_puesto}'
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (7, DESCRIPCION, user, request.remote_addr))
+
             error_message = error_result[0] if error_result else 'Error desconocido.'
             flash(f'Error al insertar empleado: {error_message}')
 
@@ -265,8 +285,8 @@ def actualizar_empleado():
         cursor.close()
         conn.close()
 
-
     return redirect(url_for('success'))
+
 
 @app.route('/eliminar_empleado', methods=['POST'])
 def eliminar_empleado():
@@ -279,6 +299,7 @@ def eliminar_empleado():
     cursor = conn.cursor()
 
     try:
+        descripcion = (f'{id_empleado},{doc_id},{user}')
         cursor.execute("DECLARE @OutResult INT; EXEC dbo.eliminarEmpleado @IdEmpleado = ?, @DocId = ?, @username = ?, @outresult = @OutResult OUTPUT; SELECT @OutResult AS OutResult;", (id_empleado, doc_id, user))
 
         result = cursor.fetchone()
@@ -286,7 +307,7 @@ def eliminar_empleado():
 
         if out_result == 0:
 
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 10, @Descripcion = 'Borrado exitoso', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 10, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (descripcion,user, request.remote_addr))
             flash('Empleado eliminado.')
         else:
 
@@ -327,7 +348,7 @@ def insertar_movimiento():
 
     id_empleado = request.form['id_empleado']
     id_tipo_mov = request.form['id_tipo_mov']
-    monto = float(request.form['monto'])
+    monto = abs(float(request.form['monto']))
     user = session.get('username')
     ip = request.remote_addr
     fecha = datetime.now().date()
