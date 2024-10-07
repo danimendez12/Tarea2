@@ -8,7 +8,7 @@ app.secret_key = 'your_secret_key'
 # Connection to SQL Server
 def get_db_connection():
     conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 18 for SQL Server};'
+        'DRIVER={ODBC Driver 17 for SQL Server};'
         'SERVER=mssql-180519-0.cloudclusters.net,10034;'
         'DATABASE=Base_de_datos;'
         'UID=Admin;'
@@ -213,7 +213,7 @@ def insertar_empleado():
             desc_no_exitosa = f"Error: {out_result}, {msgError} Doc. Identidad: {doc_id}, Nombre: {nombre}, Puesto: {nombre_puesto}"
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(5, desc_no_exitosa, user, request.remote_addr))
 
-            flash(f'Error : {msgError}')
+            flash(f'{msgError}')
 
         conn.commit()
 
@@ -364,6 +364,24 @@ def insertar_movimiento():
 
 
     return redirect(url_for('success'))
+
+
+@app.route('/consultar_empleado/<documento_id>', methods=['GET'])
+def consultar_empleado(documento_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    user = session.get('username')  # Obtener el nombre de usuario de la sesión
+
+    # Ejecutar el procedimiento almacenado para obtener la información del empleado
+    cursor.execute('EXEC dbo.consultarEmpleado @EmpleadoID = ?, @username = ?', documento_id, user)
+
+    empleado = cursor.fetchall()  # Obtener todos los resultados de la consulta
+
+    cursor.close()
+    conn.close()
+
+    # Pasar los datos del empleado a la plantilla
+    return render_template('Empleado.html', empleado=empleado, documento_id=documento_id)
 
 
 @app.route('/logout')

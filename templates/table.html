@@ -147,6 +147,11 @@
             font-weight: bold;
         }
 
+        .selected {
+            background-color: #8e8e91; /* Color de fondo azul */
+            color: white; /* Color de texto blanco */
+        }
+
     </style>
 </head>
 <body>
@@ -165,22 +170,18 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Puesto</th>
+
                     <th>Documento de Identidad</th>
-                    <th>Fecha de Contratación</th>
-                    <th>Saldo Vacaciones</th>
-                    <th>Estado</th>
+
                 </tr>
             </thead>
             <tbody>
                 {% for row in data %}
                 <tr data-id="{{ row[2] }}" onclick="selectEmpleado('{{ row[2] }}')">
                     <td>{{ row[0] }}</td>
-                    <td data-puesto-id="{{ row[1] }}">{{ row[1] }}</td>
+
                     <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                    <td>{{ row[4] }}</td>
-                    <td>{{ row[5] }}</td>
+
                 </tr>
                 {% endfor %}
             </tbody>
@@ -204,6 +205,7 @@
         <button type="button" disabled id="openMovimientoModalBtn">Insertar Movimiento</button>
         <button type="button" disabled id="openActualizarModalBtn">Actualizar Empleado</button>
         <button type="button" disabled id="openEliminarModalBtn">Eliminar Empleado</button>
+        <button type="button" id="consultarBtn" onclick="consultarEmpleado()">Consultar</button>
     </form>
 
     <form action="{{ url_for('logout') }}" method="get" style="position: absolute; top: 20px; right: 20px;">
@@ -286,6 +288,17 @@
         let selectedEmpleadoId = null;
 
         function selectEmpleado(documentoId) {
+
+
+            const previousSelectedRow = document.querySelector('.selected');
+            if (previousSelectedRow) {
+                previousSelectedRow.classList.remove('selected'); // Quitar la clase de la fila previamente seleccionada
+            }
+
+            // Marcar la nueva fila seleccionada
+            const selectedRow = document.querySelector(`tr[data-id="${documentoId}"]`);
+            selectedRow.classList.add('selected'); // Agregar la clase a la fila seleccionada
+
             selectedEmpleadoId = documentoId;
             document.getElementById('selectedId').value = documentoId;
 
@@ -298,8 +311,7 @@
             const form = document.getElementById('movimientosForm');
             form.action = '/movimientos/' + documentoId; // Cambia la acción del formulario dinámicamente
 
-            // Obtener la fila seleccionada y sus valores para prellenar el formulario
-            const selectedRow = document.querySelector(`tr[data-id="${documentoId}"]`);
+
             const nombre = selectedRow.children[0].textContent;
             const docId = selectedRow.children[2].textContent;
             const idPuesto = selectedRow.children[1].getAttribute('data-puesto-id');
@@ -313,6 +325,15 @@
             document.querySelectorAll('#nuevo_id_puesto option').forEach(option => {
                 option.selected = option.value == idPuesto; // Compara y selecciona el idPuesto
             });
+        }
+
+        function consultarEmpleado() {
+            const documentoId = document.getElementById('selectedId').value;
+            if (documentoId) {
+                window.location.href = `/consultar_empleado/${documentoId}`; // Redirecciona a la ruta de consulta
+            } else {
+                alert('Selecciona un empleado primero.');
+            }
         }
 
         // Función para abrir el modal de insertar movimiento
@@ -388,10 +409,11 @@
 
         };
 
+
+
         window.onload = function() {
             const errorMessagesDiv = document.getElementById('errorMessages');
             if (errorMessagesDiv) {
-                // Eliminar todos los hijos de errorMessagesDiv
                 errorMessagesDiv.innerHTML = '';
             }
         };
