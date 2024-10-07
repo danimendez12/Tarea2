@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash,session, jsonify
 import pyodbc
 from datetime import datetime, timedelta
+import time
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -230,6 +232,7 @@ def insertar_empleado():
 
 @app.route('/actualizar_empleado', methods=['POST'])
 def actualizar_empleado():
+
     id_empleado = request.form['id_empleado']
     nuevo_nombre = request.form['nuevo_nombre']
     nuevo_doc_id = request.form['nuevo_doc_id']
@@ -261,16 +264,20 @@ def actualizar_empleado():
         )
         result = cursor.fetchone()
         out_result = result[0] if result else None
+        cursor.execute(
+            "DECLARE @NombrePuesto NVARCHAR(128); EXEC dbo.ConsultaPuesto @IdPuesto = ?, @NombrePuesto = @NombrePuesto OUTPUT; SELECT @NombrePuesto;",
+            (nuevo_id_puesto,))
+        nombre_puesto = cursor.fetchone()[0]
 
         # Construir la descripción
         if out_result == 0:
-            DESCRIPCION = f'{id_empleado},{nombre_empleado},{puesto_empleado},{nuevo_doc_id},{nuevo_id_puesto},{saldo_vacaciones}'
+            DESCRIPCION = f'{id_empleado},{nombre_empleado},{puesto_empleado},{nuevo_nombre},{nuevo_doc_id},{nombre_puesto},{saldo_vacaciones}'
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 8, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (DESCRIPCION, user, request.remote_addr))
             flash('Empleado actualizado.')
         else:
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
             error_result = cursor.fetchone()
-            DESCRIPCION = f'{error_result},{id_empleado},{nombre_empleado},{puesto_empleado},{nuevo_doc_id},{nuevo_id_puesto}'
+            DESCRIPCION = f'{error_result},{id_empleado},{nombre_empleado},{nuevo_nombre},{nuevo_doc_id},{puesto_empleado},{nuevo_doc_id},{nombre_puesto}'
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (7, DESCRIPCION, user, request.remote_addr))
 
             error_message = error_result[0] if error_result else 'Error desconocido.'
@@ -291,15 +298,24 @@ def actualizar_empleado():
 @app.route('/eliminar_empleado', methods=['POST'])
 def eliminar_empleado():
 
+
     id_empleado = request.form['id_empleado']
     doc_id = request.form['doc_id']
     user = session.get('username')
 
     conn = get_db_connection()
     cursor = conn.cursor()
+    cursor.execute('EXEC dbo.consultarEmpleado @EmpleadoID = ?, @username = ?', (id_empleado, user))
+    empleado = cursor.fetchone()
+    nombre_empleado = empleado[1]
+    puesto_empleado = empleado[2]
+    saldo_vacaciones = empleado[3]
+
+
+
 
     try:
-        descripcion = (f'{id_empleado},{doc_id},{user}')
+        descripcion = (f'{id_empleado},{nombre_empleado},{puesto_empleado},{saldo_vacaciones},{user}')
         cursor.execute("DECLARE @OutResult INT; EXEC dbo.eliminarEmpleado @IdEmpleado = ?, @DocId = ?, @username = ?, @outresult = @OutResult OUTPUT; SELECT @OutResult AS OutResult;", (id_empleado, doc_id, user))
 
         result = cursor.fetchone()
@@ -330,12 +346,18 @@ def eliminar_empleado():
 
 @app.route('/movimientos/<documento_id>', methods=['GET'])
 def movimientos(documento_id):
+
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
     # Ejecutar el procedimiento almacenado para obtener movimientos por documento
+    start_time = time.time()
     cursor.execute('EXEC ObtenerMovimientos @IdEmpleado = ?', (documento_id,))
     movimientos = cursor.fetchall()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f'Tiempo de ejecución de la función: {execution_time:.2f} segundos')
 
     cursor.close()
     conn.close()
@@ -358,6 +380,7 @@ def insertar_movimiento():
 
 
 
+
     cursor.execute(
         "DECLARE @OutResult INT; "
         "EXEC dbo.insertarMovimiento @IdEmpleado = ?, @IdTipoMov = ?, @Fecha = ?, @Monto = ?, @IdUser = ?, @IP = ?, @outresult = @OutResult OUTPUT; "
@@ -367,21 +390,28 @@ def insertar_movimiento():
 
     result = cursor.fetchone()
     out_result = result[0] if result else None
+    cursor.execute('EXEC dbo.consultarEmpleado @EmpleadoID = ?, @username = ?', (id_empleado, user))
+    empleado = cursor.fetchone()
+    nombre_empleado = empleado[1]
+    puesto_empleado = empleado[2]
+    saldo_vacaciones = empleado[3]
+    cursor.execute('EXEC dbo.ConsultarMovimiento @idMovimiento = ?', (id_tipo_mov))
+    movimiento = cursor.fetchone()
 
     if out_result == 0:
-
-        cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 14, @Descripcion = 'Insertar movimiento exitoso', @IdPostBY = ?, @Post = ?", (user, ip))
+        descripcion = (f'{id_empleado},{nombre_empleado},{saldo_vacaciones},{movimiento},{monto}{user}')
+        cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 14, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (descripcion,user, ip))
         flash('Movimiento insertado correctamente.')
     else:
-
-        cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 13, @Descripcion = 'Intento de insertar movimiento', @IdPostBY = ?, @Post = ?",(user, ip))
         cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
         error_result = cursor.fetchone()
         error_message = error_result[0] if error_result else 'Error desconocido.'
+        descripcion = (f'{error_result}.{id_empleado},{nombre_empleado},{saldo_vacaciones},{movimiento},{monto}{user}')
+        cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 13, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(descripcion,user, ip))
+
         flash(f'Error al insertar movimiento: {error_message}')
 
     conn.commit()
-
 
 
     return redirect(url_for('success'))
@@ -389,6 +419,7 @@ def insertar_movimiento():
 
 @app.route('/consultar_empleado/<documento_id>', methods=['GET'])
 def consultar_empleado(documento_id):
+
     conn = get_db_connection()
     cursor = conn.cursor()
     user = session.get('username')  # Obtener el nombre de usuario de la sesión
@@ -407,6 +438,7 @@ def consultar_empleado(documento_id):
 
 @app.route('/logout')
 def logout():
+
     conn = get_db_connection()
     cursor = conn.cursor()
     client_ip = request.remote_addr
@@ -426,7 +458,9 @@ def logout():
         cursor.close()
         conn.close()
 
+
     return redirect(url_for('index'))
 if __name__ == '__main__':
     app.run(debug=True)
+
 
