@@ -96,6 +96,7 @@ def index():
 
                 else:
                     #Se  ejecuta cuando recibe un codigo de error 50003 o 50008
+                    print("aca")
                     cursor.execute("DECLARE @NumeroIntentos INT;"
                                    "EXEC dbo.ContarIntentosFallidosLogin @Username = ?, @TiempoLimite = ?,  @NumeroIntentos = @NumeroIntentos OUTPUT;"
                                    "SELECT @NumeroIntentos AS NumeroIntentos;",
@@ -271,13 +272,29 @@ def actualizar_empleado():
 
         # Construir la descripción
         if out_result == 0:
-            DESCRIPCION = f'{id_empleado},{nombre_empleado},{puesto_empleado},{nuevo_nombre},{nuevo_doc_id},{nombre_puesto},{saldo_vacaciones}'
+            DESCRIPCION = (
+                f'Documento empleado: {id_empleado}, '
+                f'Nombre: {nombre_empleado}, '
+                f'Puesto: {puesto_empleado}, '
+                f'Nuevo Nombre: {nuevo_nombre}, '
+                f'Nuevo Documento de Identidad: {nuevo_doc_id}, '
+                f'Nombre del Puesto: {nombre_puesto}, '
+                f'Saldo de Vacaciones: {saldo_vacaciones}'
+            )
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 8, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (DESCRIPCION, user, request.remote_addr))
             flash('Empleado actualizado.')
         else:
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
             error_result = cursor.fetchone()
-            DESCRIPCION = f'{error_result},{id_empleado},{nombre_empleado},{nuevo_nombre},{nuevo_doc_id},{puesto_empleado},{nuevo_doc_id},{nombre_puesto}'
+            DESCRIPCION = (
+                f'Error: {error_result}, '
+                f'Documento empleado: {id_empleado}, '
+                f'Nombre: {nombre_empleado}, '
+                f'Nuevo Nombre: {nuevo_nombre}, '
+                f'Nuevo Documento de Identidad: {nuevo_doc_id}, '
+                f'Puesto: {puesto_empleado}, '
+                f'Nombre del Puesto: {nombre_puesto}'
+            )
             cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = ?, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (7, DESCRIPCION, user, request.remote_addr))
 
             error_message = error_result[0] if error_result else 'Error desconocido.'
@@ -315,7 +332,13 @@ def eliminar_empleado():
 
 
     try:
-        descripcion = (f'{id_empleado},{nombre_empleado},{puesto_empleado},{saldo_vacaciones},{user}')
+        descripcion = (
+            f'Documento empleado: {id_empleado}, '
+            f'Nombre: {nombre_empleado}, '
+            f'Puesto: {puesto_empleado}, '
+            f'Saldo de vacaciones: {saldo_vacaciones}, '
+            f'Usuario: {user}'
+        )
         cursor.execute("DECLARE @OutResult INT; EXEC dbo.eliminarEmpleado @IdEmpleado = ?, @DocId = ?, @username = ?, @outresult = @OutResult OUTPUT; SELECT @OutResult AS OutResult;", (id_empleado, doc_id, user))
 
         result = cursor.fetchone()
@@ -327,7 +350,7 @@ def eliminar_empleado():
             flash('Empleado eliminado.')
         else:
 
-            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 9, @Descripcion = 'Intento de borrado', @IdPostBY = ?, @Post = ?", (user, request.remote_addr))
+            cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 9, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (descripcion,user, request.remote_addr))
             cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
             error_result = cursor.fetchone()
             error_message = error_result[0] if error_result else 'Error desconocido.'
@@ -377,36 +400,51 @@ def insertar_movimiento():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-
-
-
-
-    cursor.execute(
-        "DECLARE @OutResult INT; "
-        "EXEC dbo.insertarMovimiento @IdEmpleado = ?, @IdTipoMov = ?, @Fecha = ?, @Monto = ?, @IdUser = ?, @IP = ?, @outresult = @OutResult OUTPUT; "
-        "SELECT @OutResult AS OutResult;",
-        (id_empleado, id_tipo_mov, fecha, monto, user, ip)
-    )
-
-    result = cursor.fetchone()
-    out_result = result[0] if result else None
     cursor.execute('EXEC dbo.consultarEmpleado @EmpleadoID = ?, @username = ?', (id_empleado, user))
     empleado = cursor.fetchone()
     nombre_empleado = empleado[1]
     puesto_empleado = empleado[2]
     saldo_vacaciones = empleado[3]
+
+
+
+    cursor.execute(
+        "DECLARE @OutResult INT; "
+        "EXEC dbo.insertarMovimiento @IdEmpleado = ?, @IdTipoMov = ?, @Fecha = ?, @Monto = ?, @IdUser = ?, @IP = ?,@Saldo = ? @outresult = @OutResult OUTPUT; "
+        "SELECT @OutResult AS OutResult;",
+        (id_empleado, id_tipo_mov, fecha, monto, user, ip,saldo_vacaciones)
+    )
+
+    result = cursor.fetchone()
+    out_result = result[0] if result else None
+
     cursor.execute('EXEC dbo.ConsultarMovimiento @idMovimiento = ?', (id_tipo_mov))
     movimiento = cursor.fetchone()
 
     if out_result == 0:
-        descripcion = (f'{id_empleado},{nombre_empleado},{saldo_vacaciones},{movimiento},{monto}{user}')
+        descripcion = (
+            f'Documento empleado: {id_empleado}, '
+            f'Nombre: {nombre_empleado}, '
+            f'Saldo de vacaciones: {saldo_vacaciones}, '
+            f'Movimiento: {movimiento}, '
+            f'Monto: {monto}, '
+            f'Usuario: {user}'
+        )
         cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 14, @Descripcion = ?, @IdPostBY = ?, @Post = ?", (descripcion,user, ip))
         flash('Movimiento insertado correctamente.')
     else:
         cursor.execute("EXEC dbo.consultarError @IDerror=?", (out_result,))
         error_result = cursor.fetchone()
         error_message = error_result[0] if error_result else 'Error desconocido.'
-        descripcion = (f'{error_result}.{id_empleado},{nombre_empleado},{saldo_vacaciones},{movimiento},{monto}{user}')
+        descripcion = (
+            f'Error: {error_result}, '
+            f'Documento empleado: {id_empleado}, '
+            f'Nombre: {nombre_empleado}, '
+            f'Saldo de vacaciones: {saldo_vacaciones}, '
+            f'Movimiento: {movimiento}, '
+            f'Monto: {monto}, '
+            f'Usuario: {user}'
+        )
         cursor.execute("EXEC dbo.insertarBitacora @IDTipoE = 13, @Descripcion = ?, @IdPostBY = ?, @Post = ?",(descripcion,user, ip))
 
         flash(f'Error al insertar movimiento: {error_message}')
