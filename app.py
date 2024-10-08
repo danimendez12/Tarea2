@@ -410,7 +410,7 @@ def insertar_movimiento():
 
     cursor.execute(
         "DECLARE @OutResult INT; "
-        "EXEC dbo.insertarMovimiento @IdEmpleado = ?, @IdTipoMov = ?, @Fecha = ?, @Monto = ?, @IdUser = ?, @IP = ?,@Saldo = ? @outresult = @OutResult OUTPUT; "
+        "EXEC dbo.insertarMovimiento @IdEmpleado = ?, @IdTipoMov = ?, @Fecha = ?, @Monto = ?, @IdUser = ?, @IP = ?,@Saldo = ? ,@outresult = @OutResult OUTPUT; "
         "SELECT @OutResult AS OutResult;",
         (id_empleado, id_tipo_mov, fecha, monto, user, ip,saldo_vacaciones)
     )
