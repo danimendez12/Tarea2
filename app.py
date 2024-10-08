@@ -39,14 +39,14 @@ def index():
         if conn:
             try:
                 cursor = conn.cursor()
-                """
-                with open('/Users/danielmendez/Desktop/Tarea2/Datos.xml', 'r', encoding='utf-8') as file:
+
+                """with open('/Users/danielmendez/Desktop/Tarea2/Datos.xml', 'r', encoding='utf-8') as file:
                     xml_data = file.read()
 
                 # Ejecutar el procedimiento almacenado, pasando el XML como parámetro
                 cursor.execute("EXEC dbo.ProcesarXML @XMLDoc=?", (xml_data,))
-                conn.commit()
-                """
+                conn.commit()"""
+
 
 
 
